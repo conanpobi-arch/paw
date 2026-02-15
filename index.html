@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>PAW - 코난포비 아크</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: -apple-system; text-align: center; padding: 40px 20px; }
+        .box { border: 1px solid #0f0; padding: 20px; border-radius: 15px; background: #111; }
+        input { width: 90%; padding: 15px; border-radius: 8px; border: 1px solid #0f0; background: #000; color: #0f0; margin-bottom: 20px; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; width: 90%; }
+        #status { margin-top: 30px; font-size: 14px; color: #0c0; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🐾 PAW ARCH V1.0</h2>
+        <p>수집할 영상 링크를 입력하십시오</p>
+        <input type="text" id="videoUrl" placeholder="https://...">
+        <br>
+        <button onclick="collectVideo()">추적 시작</button>
+        <div id="status">지휘관의 명령을 대기 중...</div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+        function collectVideo() {
+            const url = document.getElementById('videoUrl').value;
+            if(!url) return alert('좌표(링크)를 입력하십시오.');
+            document.getElementById('status').innerText = "데이터 스트림 가로채기 시도 중...";
+            // 2단계 핵심 엔진 탑재 예정
+            setTimeout(() => { alert('PAW 시스템 가동 준비 완료!\n현재는 외관 설계 단계입니다.'); }, 500);
+        }
+    </script>
+</body>
+</html>
