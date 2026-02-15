@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>나나 연구실 (NANA LAB)</title>
+    <title>나나 연구실 - 57과 HJ를 위하여</title>
     <style>
         body { background: #050505; color: #00ffcc; font-family: 'Apple SD Gothic Neo', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         .screen { width: 100vw; height: 100vh; transition: transform 0.5s ease-in-out; position: absolute; }
@@ -13,7 +13,8 @@
         /* 메인 연구실 화면 */
         #main-lab { display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); }
         .lab-logo { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 0 10px #00ffcc); }
-        h1 { font-size: 22px; color: #fff; margin-bottom: 30px; letter-spacing: 2px; }
+        h1 { font-size: 20px; color: #fff; margin-bottom: 5px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); }
+        .sub-title { font-size: 14px; color: #00ffcc; margin-bottom: 30px; opacity: 0.8; font-weight: 300; }
         
         /* 아이콘 그리드 */
         .icon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
@@ -24,10 +25,12 @@
 
         /* 소설 번역 하부 모듈 화면 */
         #novel-module { transform: translateX(100%); background: #0a0a0a; padding: 20px; box-sizing: border-box; }
-        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; color: #00ffcc; cursor: pointer; }
+        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 16px; color: #00ffcc; cursor: pointer; border: 1px solid #00ffcc; padding: 5px 10px; border-radius: 5px; }
         .input-group { margin-top: 80px; text-align: left; }
         input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #00ffcc; background: #000; color: #fff; margin-bottom: 15px; box-sizing: border-box; }
         .action-btn { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #00ffcc; color: #000; font-weight: bold; font-size: 16px; }
+        
+        .footer { position: absolute; bottom: 20px; width: 100%; font-size: 11px; color: #444; text-align: center; }
     </style>
 </head>
 <body>
@@ -35,6 +38,7 @@
     <div id="main-lab" class="screen">
         <div class="lab-logo">🐾</div>
         <h1>나나 연구실</h1>
+        <div class="sub-title">57과 HJ를 위하여</div>
         
         <div class="icon-grid">
             <div class="icon-btn" onclick="alert('동영상 엔진 가동 준비 중...')">
@@ -46,14 +50,16 @@
                 <div class="icon-label">소설 번역기</div>
             </div>
         </div>
+        <div class="footer">© 2026 NANA LAB. FOR 57 & HJ.</div>
     </div>
 
     <div id="novel-module" class="screen">
-        <div class="back-btn" onclick="closeModule()">◀ 연구실로 복귀</div>
+        <div class="back-btn" onclick="closeModule()">◀ 복귀</div>
         <div class="input-group">
-            <h2 style="color: #ffcc00;">📚 소설 번역 모듈</h2>
+            <h2 style="color: #ffcc00; margin-bottom: 5px;">📚 소설 번역 모듈</h2>
+            <p style="font-size: 12px; color: #ffcc00; margin-bottom: 20px; opacity: 0.7;">FOR 57 & HJ PROJECT</p>
             <p style="font-size: 14px; color: #888;">대상 사이트의 주소를 입력하십시오.</p>
-            <input type="text" id="novelUrl" placeholder="https://소설주소.com/...">
+            <input type="text" id="novelUrl" placeholder="https://...">
             <button class="action-btn" onclick="startTranslation()" style="background: #ffcc00;">번역 공정 가동</button>
             <div id="result-area" style="margin-top: 30px; padding: 15px; border-top: 1px solid #333; color: #ccc; font-size: 15px; line-height: 1.6; display: none;">
                 </div>
@@ -71,4 +77,14 @@
             document.getElementById('novel-module').style.transform = 'translateX(100%)';
         }
 
-        function startTranslation()
+        function startTranslation() {
+            const url = document.getElementById('novelUrl').value;
+            if(!url) return alert('좌표를 입력해 주세요.');
+            
+            const status = document.getElementById('result-area');
+            status.style.display = 'block';
+            status.innerText = "57과 HJ를 위한 지식 보급로를 탐색 중입니다...\n연구실 엔진 최적화 작업 중입니다.";
+        }
+    </script>
+</body>
+</html>
