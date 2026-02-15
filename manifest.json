@@ -1,0 +1,15 @@
+{
+  "short_name": "PAW",
+  "name": "PAW-ARCH Collector",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
