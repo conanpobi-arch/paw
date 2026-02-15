@@ -11,62 +11,51 @@
         body { margin: 0; padding: 0; overflow: hidden; font-family: 'Apple SD Gothic Neo', sans-serif; background: #000; }
         .screen { width: 100vw; height: 100vh; transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1); position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; }
         
-        /* [배경: 설계자님의 의도대로 어둡고 깊이감 있게] */
-        #main-lab { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); align-items: center; justify-content: center; }
+        #main-lab { 
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); 
+            align-items: center; justify-content: center; 
+        }
         
-        /* [메인 카드 패널] */
         .glass-panel { 
             background: rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
-            border-radius: 40px; 
-            padding: 50px 20px; 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            border-radius: 40px; padding: 50px 20px; 
             border: 1px solid rgba(255,255,255,0.1); 
-            width: 85%; 
-            max-width: 380px; 
-            text-align: center; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            width: 85%; max-width: 380px; text-align: center; 
         }
 
-        /* [스케치 인장 - 정중앙 핵심] */
+        /* [커플 스케치 인장 - 정중앙 및 이미지 고정] */
         .signature-emblem {
-            width: 150px; height: 150px;
+            width: 160px; height: 160px;
             border-radius: 50%;
-            border: 4px solid rgba(0, 255, 204, 0.5);
-            background-image: url('https://r.jina.ai/i/65927'); /* 우리가 정한 그 이미지 */
+            border: 4px solid #00ffcc;
+            /* 설계자님이 확인하신 바로 그 이미지 주소 */
+            background-image: url('https://r.jina.ai/i/65927'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            margin: 0 auto 30px; /* 정중앙 정렬 */
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+            margin: 0 auto 30px; /* 가로 정중앙 */
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
             background-color: #111;
         }
 
-        h1 { font-size: 26px; color: #fff; margin-bottom: 8px; letter-spacing: -1px; }
-        .sub-title { font-size: 14px; color: #00ffcc; margin-bottom: 40px; font-weight: 500; opacity: 0.9; }
+        h1 { font-size: 26px; color: #fff; margin-bottom: 8px; }
+        .sub-title { font-size: 14px; color: #00ffcc; margin-bottom: 40px; font-weight: bold; }
         
-        /* [기능 버튼 그리드] */
         .icon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .icon-btn { 
-            background: rgba(255, 255, 255, 0.05); 
+            background: rgba(255, 255, 255, 0.07); 
             border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 20px; 
-            padding: 20px 10px; 
-            cursor: pointer;
-            transition: 0.3s;
+            border-radius: 20px; padding: 25px 10px; cursor: pointer;
         }
-        .icon-btn:active { background: rgba(255, 255, 255, 0.2); transform: scale(0.95); }
         .icon-box { font-size: 30px; margin-bottom: 10px; }
-        .icon-label { font-size: 13px; font-weight: bold; color: #eee; }
+        .icon-label { font-size: 13px; font-weight: bold; color: #fff; }
         
-        /* [히스토리 모달] */
-        #history-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .history-card { background: #151515; width: 85%; max-width: 400px; border-radius: 30px; padding: 30px; border: 1px solid #333; color: #fff; text-align: left; }
-        .history-item { margin-bottom: 20px; border-left: 3px solid #00ffcc; padding-left: 15px; }
-
-        /* [푸터 및 버전] */
         .footer { position: absolute; bottom: 40px; width: 100%; text-align: center; color: rgba(255,255,255,0.3); font-size: 11px; }
-        .version-btn { background: #00ffcc; color: #000; border: none; font-weight: bold; padding: 6px 15px; border-radius: 20px; margin-top: 10px; cursor: pointer; }
+        .version-btn { background: #00ffcc; color: #000; border: none; font-weight: bold; padding: 8px 18px; border-radius: 20px; cursor: pointer; margin-top: 10px; }
+
+        #history-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .history-card { background: #111; width: 80%; border-radius: 30px; padding: 30px; border: 1px solid #333; color: #fff; }
     </style>
 </head>
 <body>
@@ -78,11 +67,11 @@
             <div class="sub-title">57과 HJ를 위하여</div>
             
             <div class="icon-grid">
-                <div class="icon-btn" onclick="alert('엔진 준비 중...')">
+                <div class="icon-btn" onclick="alert('시스템 예열 중...')">
                     <div class="icon-box">📹</div>
                     <div class="icon-label">동영상 수집</div>
                 </div>
-                <div class="icon-btn" onclick="openModule()">
+                <div class="icon-btn" onclick="alert('내일 엔진이 가동됩니다!')">
                     <div class="icon-box">📚</div>
                     <div class="icon-label">소설 번역기</div>
                 </div>
@@ -91,26 +80,16 @@
 
         <div class="footer">
             © 2026 NANA LAB. FOR 57 & HJ OROW.<br>
-            <button class="version-btn" onclick="toggleHistory()">🕒 HISTORY (SYSTEM V2.3)</button>
+            <button class="version-btn" onclick="toggleHistory()">🕒 HISTORY (SYSTEM V2.3.2)</button>
         </div>
     </div>
 
     <div id="history-modal" onclick="toggleHistory()">
         <div class="history-card" onclick="event.stopPropagation()">
-            <h3 style="color:#00ffcc; margin-top:0;">📜 나나 연구실 연대기</h3>
-            <div class="history-item">
-                <div style="font-weight:bold;">V2.3 (Current)</div>
-                <div style="font-size:12px; color:#aaa;">센터 중심 인장 디자인 확정 및 UI 정밀 정렬.</div>
-            </div>
-            <div class="history-item">
-                <div style="font-weight:bold;">V2.2</div>
-                <div style="font-size:12px; color:#aaa;">스케치 인장 도입 및 로딩 안정화.</div>
-            </div>
-            <div class="history-item">
-                <div style="font-weight:bold;">V1.0</div>
-                <div style="font-size:12px; color:#aaa;">나나 연구실 기지 설립.</div>
-            </div>
-            <button style="width:100%; padding:12px; background:#333; color:#fff; border:none; border-radius:15px; margin-top:10px; font-weight:bold;" onclick="toggleHistory()">기록 닫기</button>
+            <h3 style="color:#00ffcc;">📜 개발 기록</h3>
+            <p style="font-size:13px; color:#ccc;">• V2.3.2: 인장 정중앙 고정 완료</p>
+            <p style="font-size:13px; color:#ccc;">• V2.0: 기지 기본 골조 완공</p>
+            <button style="width:100%; padding:10px; background:#333; color:#fff; border:none; border-radius:15px; margin-top:20px;" onclick="toggleHistory()">닫기</button>
         </div>
     </div>
 
@@ -118,10 +97,6 @@
         function toggleHistory() {
             const m = document.getElementById('history-modal');
             m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        }
-        function openModule() {
-            // 소설 번역 모듈 진입 로직 (기존 유지)
-            alert('소설 번역 모듈로 진입합니다.');
         }
     </script>
 </body>
