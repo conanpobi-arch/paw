@@ -29,4 +29,98 @@
         
         /* 탭 시스템 스타일 */
         .tab-container { display: flex; padding: 10px 20px; background: #111; gap: 10px; }
-        .tab { flex: 1; padding: 12px; text-align: center; font-size:
+        .tab { flex: 1; padding: 12px; text-align: center; font-size: 14px; color: #555; cursor: pointer; border-bottom: 2px solid #222; }
+        .tab.active { color: #ffcc00; border-bottom: 2px solid #ffcc00; font-weight: bold; }
+        
+        .tab-content { display: none; padding: 20px; flex: 1; overflow-y: auto; }
+        .tab-content.active { display: block; }
+        
+        input, textarea { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; font-size: 16px; margin-bottom: 15px; }
+        textarea { height: 250px; resize: none; border-color: #444; }
+        .action-btn { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #ffcc00; color: #000; font-weight: bold; font-size: 16px; }
+        
+        .footer { position: absolute; bottom: 20px; width: 100%; font-size: 11px; color: #444; text-align: center; z-index: -1; }
+    </style>
+</head>
+<body>
+
+    <div id="main-lab" class="screen">
+        <div class="lab-logo">🐾</div>
+        <h1>나나 연구실</h1>
+        <div class="sub-title">57과 HJ를 위하여</div>
+        
+        <div class="icon-grid">
+            <div class="icon-btn" onclick="alert('동영상 수집 대기 중...')">
+                <div class="icon-box">📹</div>
+                <div class="icon-label">동영상 수집</div>
+            </div>
+            <div class="icon-btn" onclick="openModule()">
+                <div class="icon-box">📚</div>
+                <div class="icon-label">소설 번역기</div>
+            </div>
+        </div>
+        <div class="footer">© 2026 NANA LAB. FOR 57 & HJ.</div>
+    </div>
+
+    <div id="novel-module" class="screen">
+        <div class="module-header">
+            <div class="back-btn" onclick="closeModule()">◀ 복귀</div>
+            <h2 style="color: #ffcc00; margin-top: 15px; margin-bottom: 5px;">📚 소설 번역 모듈</h2>
+            <p style="font-size: 11px; color: #888;">FOR 57 & HJ PROJECT</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tab active" id="tab-url" onclick="showTab('url')">주소 입력</div>
+            <div class="tab" id="tab-text" onclick="showTab('text')">본문 붙여넣기</div>
+        </div>
+
+        <div id="content-url" class="tab-content active">
+            <p style="font-size: 13px; color: #00ffcc; margin-bottom: 15px;">번역하고 싶은 페이지의 주소를 적어주세요.</p>
+            <input type="text" id="novelUrl" placeholder="https://...">
+            <button class="action-btn" onclick="startTranslation('url')">주소 분석 및 번역</button>
+        </div>
+
+        <div id="content-text" class="tab-content">
+            <p style="font-size: 13px; color: #00ffcc; margin-bottom: 15px;">소설 내용을 복사해서 아래에 붙여넣어 주세요.</p>
+            <textarea id="novelRawText" placeholder="여기에 원문 내용을 붙여넣으십시오..."></textarea>
+            <button class="action-btn" onclick="startTranslation('text')">즉시 번역 시작</button>
+        </div>
+    </div>
+
+    <script>
+        function openModule() {
+            document.getElementById('main-lab').style.transform = 'translateX(-100%)';
+            document.getElementById('novel-module').style.transform = 'translateX(0)';
+        }
+
+        function closeModule() {
+            document.getElementById('main-lab').style.transform = 'translateX(0)';
+            document.getElementById('novel-module').style.transform = 'translateX(100%)';
+        }
+
+        function showTab(type) {
+            // 모든 탭과 컨텐츠 초기화
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // 선택한 탭 활성화
+            document.getElementById('tab-' + type).classList.add('active');
+            document.getElementById('content-' + type).classList.add('active');
+        }
+
+        function startTranslation(mode) {
+            let data = "";
+            if(mode === 'url') {
+                data = document.getElementById('novelUrl').value;
+                if(!data) return alert('주소를 입력해 주세요.');
+                alert('주소 분석 엔진을 가동합니다: ' + data);
+            } else {
+                data = document.getElementById('novelRawText').value;
+                if(!data) return alert('내용을 붙여넣어 주세요.');
+                alert('본문 텍스트 번역 공정을 시작합니다.');
+            }
+            // 실제 번역 로직은 다음 단계에서 연결 예정입니다.
+        }
+    </script>
+</body>
+</html>
