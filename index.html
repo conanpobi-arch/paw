@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>나나 연구실 - 57 & HJ OROW</title>
     <style>
+        /* [기존 멋진 디자인 복구] */
         body { margin: 0; padding: 0; overflow: hidden; font-family: 'Apple SD Gothic Neo', sans-serif; background: #000; color: #fff; }
-        .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s ease-in-out; }
         #main-lab { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); z-index: 10; }
+        .glass-panel { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); border-radius: 40px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.15); width: 85%; max-width: 360px; text-align: center; }
+        .signature-emblem { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #00ffcc; background-image: url('profile.png'); background-size: cover; background-position: center; margin: 0 auto 20px; box-shadow: 0 0 30px rgba(0, 255, 204, 0.4); }
         
-        .glass-panel { 
-            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
-            border-radius: 40px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.15); 
-            width: 85%; max-width: 360px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .signature-emblem {
-            width: 140px; height: 140px; border-radius: 50%; border: 4px solid #00ffcc;
-            background-image: url('profile.png'); background-size: cover; background-position: center;
-            margin: 0 auto 20px; box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
-        }
-
-        .trans-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 20px; font-weight: bold; font-size: 18px; cursor: pointer; width: 100%; margin-top: 10px; }
-        input { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px; font-size: 16px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        #trans-module { position: fixed; top: 100vh; left: 0; width: 100vw; height: 100vh; background: #0d0d0d; z-index: 100; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
+        #trans-module.active { top: 0; }
+        .module-header { padding: 50px 20px 15px; background: #151515; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .back-btn { background: #333; border: none; color: #00ffcc; padding: 8px 15px; border-radius: 12px; font-weight: bold; }
+        .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .input-wrapper { position: relative; width: 100%; }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px 45px 15px 15px; font-size: 16px; width: 100%; box-sizing: border-box; }
+        .clear-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #333; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; }
+        .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; font-size: 18px; cursor: pointer; }
+        #result-area { background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; color: #ddd; font-size: 17px; min-height: 200px; border: 1px solid #222; white-space: pre-wrap; }
+        .v-tag { position: absolute; bottom: 35px; color: rgba(0, 255, 204, 0.4); font-size: 11px; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
@@ -30,24 +30,72 @@
     <div id="main-lab" class="screen">
         <div class="glass-panel">
             <div class="signature-emblem"></div>
-            <h1 style="margin: 0; font-size: 26px;">나나 연구실</h1>
-            <p style="color: #00ffcc; font-weight: bold; margin: 10px 0 30px 0; opacity: 0.8;">FOR 57 & HJ : OROW</p>
-            
-            <input type="text" id="target-url" placeholder="소설 주소를 입력하세요">
-            <button class="trans-btn" onclick="warpToTrans()">워프 번역 가동</button>
+            <h1>나나 연구실</h1>
+            <p style="color:#00ffcc;">FOR 57 & HJ : OROW</p>
+            <button class="action-btn" onclick="toggleModule(true)" style="width:100%">소설 번역 엔진 가동</button>
+        </div>
+        <div class="v-tag">── SYSTEM V4.5 TUNNEL REVIVAL ──</div>
+    </div>
+
+    <div id="trans-module">
+        <div class="module-header">
+            <span style="color:#00ffcc; font-weight:bold;">NANA PRIVATE TUNNEL</span>
+            <button class="back-btn" onclick="toggleModule(false)">돌아가기</button>
+        </div>
+        <div class="trans-content">
+            <div class="input-wrapper">
+                <input type="text" id="target-url" placeholder="소설 주소를 입력하세요">
+                <button class="clear-btn" onclick="document.getElementById('target-url').value=''">✕</button>
+            </div>
+            <button class="action-btn" onclick="runSmartTrans()">강제 데이터 인출</button>
+            <div id="result-area">터널 개통 대기 중...</div>
         </div>
     </div>
 
     <script>
-        function warpToTrans() {
-            const urlInput = document.getElementById('target-url');
-            if(!urlInput.value) return alert("주소를 입력해 주세요!");
+        function toggleModule(s) { document.getElementById('trans-module').classList.toggle('active', s); }
 
-            const target = urlInput.value.trim();
-            // 구글 번역 엔진을 이용해 새 창에서 강제 실행 (차단 원천 봉쇄)
-            const warpUrl = `https://translate.google.com/translate?sl=zh-CN&tl=ko&u=${encodeURIComponent(target)}`;
-            
-            window.open(warpUrl, '_blank');
+        async function runSmartTrans() {
+            const urlInput = document.getElementById('target-url');
+            const res = document.getElementById('result-area');
+            // 포비의 전용 터널 주소
+            const myTunnel = "https://nana-tunnel.gyerimpa.workers.dev";
+
+            if(!urlInput.value) return alert("주소를 입력해 주세요!");
+            res.innerHTML = "<div style='color:#00ffcc;'>[터널 진입]</div>데이터 세탁 및 인출 중...";
+
+            try {
+                // [신비한 필터] 브라우저를 속이기 위해 터널 주소를 직접 호출
+                const target = urlInput.value.trim();
+                const fetchUrl = `${myTunnel}/?url=${encodeURIComponent(target)}`;
+
+                const response = await fetch(fetchUrl);
+                const html = await response.text();
+
+                // 본문 텍스트만 깔끔하게 추출
+                const temp = document.createElement("div");
+                temp.innerHTML = html;
+                let text = temp.innerText.substring(0, 4000);
+
+                if(text.length < 50) throw new Error("데이터 탈취 실패 (사이트 보안 강화)");
+
+                res.innerHTML = "<div style='color:#00ffcc;'>[인출 성공]</div>나나 전용 번역 필터 적용 중...";
+
+                // 구글 번역 API (익명 통로)
+                const trRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(text)}`);
+                const trData = await trRes.json();
+                
+                let translated = trData[0].map(x => x[0]).join('');
+
+                // 한자음 교정 필터
+                const filter = (t) => t.replace(/예천/g, "엽진").replace(/공간을 찢고/g, "파공(破空)하여").replace(/기운/g, "진기(眞氣)");
+
+                res.innerHTML = `<div style="color:#00ffcc; font-size:12px; margin-bottom:10px;">[침투 완료]</div>` + filter(translated);
+
+            } catch (e) {
+                res.innerHTML = `<div style="color:#ffcc00;">[긴급 상황]</div><br>${e.message}<br><br>
+                <span style="font-size:13px; color:#888;">터널 입구에서 신호를 거부당했습니다. 워커 코드가 최신인지 확인해 주세요!</span>`;
+            }
         }
     </script>
 </body>
