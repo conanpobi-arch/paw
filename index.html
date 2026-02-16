@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>나나 연구실 - 57 & HJ OROW</title>
     <style>
-        /* [공통 디자인 시스템] */
+        /* [공통 디자인 - 기존 감성 유지] */
         body { margin: 0; padding: 0; overflow: hidden; font-family: 'Apple SD Gothic Neo', sans-serif; background: #000; color: #fff; }
         .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s ease-in-out; }
-        
-        #main-lab { 
-            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); 
-            z-index: 10;
-        }
+        #main-lab { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); z-index: 10; }
         
         .glass-panel { 
             background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
@@ -46,7 +42,6 @@
 
         .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         input, textarea { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px; font-size: 16px; width: 100%; box-sizing: border-box; }
-        textarea { height: 120px; }
         .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; }
 
         #result-area { 
@@ -82,20 +77,19 @@
             </div>
         </div>
         <div class="footer">
-            <div class="v-tag" onclick="toggleHistory(true)">── SYSTEM V2.6.3 HISTORY ──</div>
+            <div class="v-tag" onclick="toggleHistory(true)">── SYSTEM V2.7 PRIVATE TUNNEL ──</div>
         </div>
     </div>
 
     <div id="trans-module">
         <div class="module-header">
-            <span style="color: #00ffcc; font-weight: bold;">NANA SPECIAL ENGINE</span>
+            <span style="color: #00ffcc; font-weight: bold;">NANA PRIVATE ENGINE</span>
             <button class="back-btn" onclick="toggleModule(false)">돌아가기</button>
         </div>
         <div class="trans-content">
-            <input type="text" id="target-url" placeholder="중국 소설 주소를 입력하세요">
-            <textarea id="source-text" placeholder="직접 입력 모드 (우회 실패 시 자동 활성)"></textarea>
-            <button class="action-btn" onclick="runSmartTrans()">특수 우회 및 번역 가동</button>
-            <div id="result-area">침투 대기 중...</div>
+            <input type="text" id="target-url" placeholder="뚫고 싶은 중국 소설 주소를 입력하세요">
+            <button class="action-btn" onclick="runSmartTrans()">전용 터널로 강제 침투</button>
+            <div id="result-area">터널 개통 대기 중...</div>
         </div>
     </div>
 
@@ -103,9 +97,9 @@
         <div class="history-card" onclick="event.stopPropagation()">
             <h3 style="color:#00ffcc; margin-top:0;">📜 연구실 기록</h3>
             <div style="font-size:14px; color:#ccc; line-height:1.8;">
-                • <b>V2.6.3:</b> 특수 위장(User-Agent) 및 무삭제 우회 로직<br>
-                • <b>V2.6.1:</b> 추출 로직 예외 처리 보강<br>
-                • <b>V2.3:</b> 시그니처 인장 사진 안착
+                • <b>V2.7:</b> 전용 터널(Cloudflare Worker) 정식 개통<br>
+                • <b>V2.6.3:</b> 특수 위장(User-Agent) 로직 탑재<br>
+                • <b>V2.3:</b> 포비 & 나나 시그니처 인장 사진 안착
             </div>
             <button style="width:100%; padding:15px; background:#333; color:#fff; border:none; border-radius:15px; margin-top:25px;" onclick="toggleHistory(false)">닫기</button>
         </div>
@@ -117,48 +111,38 @@
 
         async function runSmartTrans() {
             const urlInput = document.getElementById('target-url');
-            const sourceInput = document.getElementById('source-text');
             const res = document.getElementById('result-area');
-
-            if(!urlInput.value && !sourceInput.value) return alert("주소를 입력해 주세요!");
             
-            res.innerHTML = "<div style='color:#00ffcc;'>[특수 침투 개시]</div>우회 터널을 생성하고 있습니다...";
+            // 설계자님의 전용 터널 주소 적용
+            const myTunnel = "https://nana-tunnel.gyerimpa.workers.dev";
+
+            if(!urlInput.value) return alert("소설 주소를 입력해 주세요!");
+            
+            res.innerHTML = "<div style='color:#00ffcc;'>[전용 터널 진입]</div>적의 보안망을 속이는 중입니다...";
 
             try {
-                let rawText = sourceInput.value;
+                // 1. 전용 터널을 통한 원문 데이터 강제 인출
+                const fetchUrl = `${myTunnel}?url=${encodeURIComponent(urlInput.value.trim())}`;
+                const fetchRes = await fetch(fetchUrl);
+                const rawHtml = await fetchRes.text();
 
-                if(urlInput.value) {
-                    const targetUrl = urlInput.value.trim();
-                    // [특수 전략: 위장 헤더 및 No-Cache 파라미터 주입]
-                    const fetchUrl = `https://r.jina.ai/${targetUrl}`;
-                    
-                    const fetchRes = await fetch(fetchUrl, {
-                        method: 'GET',
-                        headers: {
-                            'X-Return-Format': 'markdown',
-                            'X-No-Cache': 'true',
-                            'X-With-Generated-Alt': 'true'
-                        }
-                    });
+                // 2. 본문 정제 (HTML 태그 제거)
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = rawHtml;
+                const cleanText = tempDiv.innerText.substring(0, 4500); // 번역 가능한 길이로 절삭
 
-                    if (fetchRes.ok) {
-                        rawText = await fetchRes.text();
-                    } else {
-                        throw new Error("1차 침투 실패");
-                    }
-                }
+                if(cleanText.length < 100) throw new Error("데이터 탈취 실패");
 
-                // [번역 프로세스]
-                res.innerHTML = "<div style='color:#00ffcc;'>[추출 성공]</div>대한민국 한자음으로 정밀 번역 중...";
+                // 3. 지능형 번역 가동
+                res.innerHTML = "<div style='color:#00ffcc;'>[데이터 탈취 성공]</div>대한민국 한자음으로 변환 중...";
                 
-                const safeText = rawText.substring(0, 4000); 
-                const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(safeText)}`);
+                const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(cleanText)}`);
                 const transData = await transRes.json();
                 
                 let translated = "";
                 transData[0].forEach(item => { if(item[0]) translated += item[0]; });
 
-                // [나나 전용 필터]
+                // 4. 나나 전용 필터 (한자음 교정)
                 const filter = (t) => {
                     return t.replace(/예천/g, "엽진")
                             .replace(/공간을 찢고/g, "파공(破空)하여")
@@ -166,14 +150,13 @@
                             .replace(/소염/g, "소염");
                 };
 
-                res.innerHTML = `<div style="color:#00ffcc; font-size:12px; margin-bottom:15px;">[침투 임무 완수]</div>` + filter(translated);
+                res.innerHTML = `<div style="color:#00ffcc; font-size:12px; margin-bottom:15px;">[임무 완수: 지하 터널 통과]</div>` + filter(translated);
 
             } catch (e) {
                 console.error(e);
-                res.innerHTML = `<div style="color:#ffcc00; font-weight:bold;">[경고] 우회로 차단됨</div><br>
-                                 적의 방화벽이 '공용 우회로'를 감지했습니다.<br><br>
-                                 <span style="color:#00ffcc;">내일 아침 전용 대리인(Private Proxy)을 설치하겠습니다.</span><br>
-                                 현재로서는 잠시 후 다시 시도하시거나, 본문을 복사하여 넣어주시는 것이 유일한 통로입니다.`;
+                res.innerHTML = `<div style="color:#ffcc00; font-weight:bold;">[긴급] 터널 입구 차단</div><br>
+                                 주소가 올바른지 확인해 보시거나, 잠시 후 다시 시도해 주세요.<br>
+                                 적의 방화벽이 일시적으로 터널을 감시 중일 수 있습니다.`;
             }
         }
     </script>
