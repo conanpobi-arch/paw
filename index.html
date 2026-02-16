@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>나나 연구실 - 57 & HJ OROW</title>
     <style>
-        /* [공통 디자인 - 기존 감성 유지] */
         body { margin: 0; padding: 0; overflow: hidden; font-family: 'Apple SD Gothic Neo', sans-serif; background: #000; color: #fff; }
         .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s ease-in-out; }
         #main-lab { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); z-index: 10; }
@@ -27,34 +26,39 @@
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); 
             border-radius: 20px; padding: 25px 10px; cursor: pointer; transition: 0.2s;
         }
-        .icon-btn:active { transform: scale(0.95); background: rgba(0, 255, 204, 0.1); }
 
-        /* [번역 모듈 레이어] */
+        /* [번역 모듈] */
         #trans-module {
             position: fixed; top: 100vh; left: 0; width: 100vw; height: 100vh;
             background: #0d0d0d; z-index: 100; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex; flex-direction: column;
         }
         #trans-module.active { top: 0; }
-
         .module-header { padding: 50px 20px 15px; background: #151515; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
         .back-btn { background: #333; border: none; color: #00ffcc; padding: 8px 15px; border-radius: 12px; font-weight: bold; }
 
-        .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        input, textarea { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px; font-size: 16px; width: 100%; box-sizing: border-box; }
-        .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; }
-
-        #result-area { 
-            background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; 
-            color: #ddd; font-size: 17px; min-height: 200px; border: 1px solid #222; margin-top: 10px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); white-space: pre-wrap;
+        /* [주소창 & 지우기 버튼] */
+        .input-wrapper { position: relative; width: 100%; }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px 45px 15px 15px; font-size: 16px; width: 100%; box-sizing: border-box; }
+        .clear-btn { 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: #333; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px;
+            font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
+
+        .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; font-size: 18px; cursor: pointer; }
+        #result-area { background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; color: #ddd; font-size: 17px; min-height: 200px; border: 1px solid #222; white-space: pre-wrap; }
 
         .footer { position: absolute; bottom: 35px; text-align: center; width: 100%; z-index: 10; }
         .v-tag { color: rgba(0, 255, 204, 0.4); font-size: 11px; cursor: pointer; letter-spacing: 1px; }
 
+        /* [히스토리 모달 강화] */
         #history-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .history-card { background: #1a1a1a; width: 85%; border-radius: 30px; padding: 30px; border: 1px solid #333; }
+        .history-card { background: #1a1a1a; width: 85%; max-height: 70vh; border-radius: 30px; padding: 30px; border: 1px solid #333; display: flex; flex-direction: column; }
+        .history-list { overflow-y: auto; flex: 1; margin: 15px 0; padding-right: 5px; }
+        .history-item { padding: 10px 0; border-bottom: 1px solid #222; font-size: 13px; color: #ccc; line-height: 1.6; }
+        .history-item b { color: #00ffcc; }
     </style>
 </head>
 <body>
@@ -64,21 +68,12 @@
             <div class="signature-emblem"></div>
             <h1 style="margin: 0; font-size: 26px;">나나 연구실</h1>
             <p style="color: #00ffcc; font-weight: bold; margin: 10px 0 35px 0; opacity: 0.8;">FOR 57 & HJ : OROW</p>
-            
             <div class="icon-grid">
-                <div class="icon-btn" onclick="alert('데이터 수집 엔진 대기 중...')">
-                    <div style="font-size: 32px;">📹</div>
-                    <div style="font-size: 13px; margin-top: 8px; color: #aaa;">동영상 수집</div>
-                </div>
-                <div class="icon-btn" onclick="toggleModule(true)">
-                    <div style="font-size: 32px;">📚</div>
-                    <div style="font-size: 13px; margin-top: 8px; font-weight: bold;">소설 번역기</div>
-                </div>
+                <div class="icon-btn" onclick="alert('데이터 수집 엔진 대기 중...')"><div style="font-size: 32px;">📹</div><div style="font-size: 12px; margin-top: 8px; color:#aaa;">동영상 수집</div></div>
+                <div class="icon-btn" onclick="toggleModule(true)"><div style="font-size: 32px;">📚</div><div style="font-size: 12px; margin-top: 8px; font-weight: bold;">소설 번역기</div></div>
             </div>
         </div>
-        <div class="footer">
-            <div class="v-tag" onclick="toggleHistory(true)">── SYSTEM V2.7 PRIVATE TUNNEL ──</div>
-        </div>
+        <div class="footer"><div class="v-tag" onclick="toggleHistory(true)">── SYSTEM V2.8 HISTORY ──</div></div>
     </div>
 
     <div id="trans-module">
@@ -87,21 +82,31 @@
             <button class="back-btn" onclick="toggleModule(false)">돌아가기</button>
         </div>
         <div class="trans-content">
-            <input type="text" id="target-url" placeholder="뚫고 싶은 중국 소설 주소를 입력하세요">
+            <div class="input-wrapper">
+                <input type="text" id="target-url" placeholder="중국 소설 주소를 입력하세요">
+                <button class="clear-btn" onclick="document.getElementById('target-url').value=''">✕</button>
+            </div>
             <button class="action-btn" onclick="runSmartTrans()">전용 터널로 강제 침투</button>
-            <div id="result-area">터널 개통 대기 중...</div>
+            <div id="result-area">터널 가동 대기 중...</div>
         </div>
     </div>
 
     <div id="history-modal" onclick="toggleHistory(false)">
         <div class="history-card" onclick="event.stopPropagation()">
-            <h3 style="color:#00ffcc; margin-top:0;">📜 연구실 기록</h3>
-            <div style="font-size:14px; color:#ccc; line-height:1.8;">
-                • <b>V2.7:</b> 전용 터널(Cloudflare Worker) 정식 개통<br>
-                • <b>V2.6.3:</b> 특수 위장(User-Agent) 로직 탑재<br>
-                • <b>V2.3:</b> 포비 & 나나 시그니처 인장 사진 안착
+            <h3 style="color:#00ffcc; margin-top:0;">📜 나나 연구실 연대기</h3>
+            <div class="history-list">
+                <div class="history-item"><b>V2.8:</b> 히스토리 10선 고정 및 주소 지우기 기능</div>
+                <div class="history-item"><b>V2.7:</b> 전용 터널(Cloudflare Worker) 개통</div>
+                <div class="history-item"><b>V2.6.3:</b> 특수 위장(User-Agent) 침투 로직</div>
+                <div class="history-item"><b>V2.6.1:</b> 추출 실패 예외 처리 및 UI 보정</div>
+                <div class="history-item"><b>V2.6:</b> 지능형 소설 번역 엔진(Gemini기반)</div>
+                <div class="history-item"><b>V2.5:</b> 히스토리 복구 및 메인 복귀 시스템</div>
+                <div class="history-item"><b>V2.3:</b> 시그니처 인장(profile.png) 최적화</div>
+                <div class="history-item"><b>V1.5:</b> 모바일 인터페이스 글래스즘 적용</div>
+                <div class="history-item"><b>V1.0:</b> 나나 연구실 프로젝트 기지 설립</div>
+                <div class="history-item"><b>Origin:</b> 57 & HJ OROW 정신 계승</div>
             </div>
-            <button style="width:100%; padding:15px; background:#333; color:#fff; border:none; border-radius:15px; margin-top:25px;" onclick="toggleHistory(false)">닫기</button>
+            <button style="width:100%; padding:15px; background:#333; color:#fff; border:none; border-radius:15px; font-weight:bold;" onclick="toggleHistory(false)">확인</button>
         </div>
     </div>
 
@@ -112,51 +117,36 @@
         async function runSmartTrans() {
             const urlInput = document.getElementById('target-url');
             const res = document.getElementById('result-area');
-            
-            // 설계자님의 전용 터널 주소 적용
             const myTunnel = "https://nana-tunnel.gyerimpa.workers.dev";
 
-            if(!urlInput.value) return alert("소설 주소를 입력해 주세요!");
-            
-            res.innerHTML = "<div style='color:#00ffcc;'>[전용 터널 진입]</div>적의 보안망을 속이는 중입니다...";
+            if(!urlInput.value) return alert("주소를 입력해 주세요!");
+            res.innerHTML = "<div style='color:#00ffcc;'>[전용 터널 진입]</div>적의 보안망 무력화 중...";
 
             try {
-                // 1. 전용 터널을 통한 원문 데이터 강제 인출
                 const fetchUrl = `${myTunnel}?url=${encodeURIComponent(urlInput.value.trim())}`;
                 const fetchRes = await fetch(fetchUrl);
                 const rawHtml = await fetchRes.text();
 
-                // 2. 본문 정제 (HTML 태그 제거)
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = rawHtml;
-                const cleanText = tempDiv.innerText.substring(0, 4500); // 번역 가능한 길이로 절삭
+                const cleanText = tempDiv.innerText.substring(0, 4500);
 
-                if(cleanText.length < 100) throw new Error("데이터 탈취 실패");
+                if(cleanText.length < 100) throw new Error("탈취 실패");
 
-                // 3. 지능형 번역 가동
-                res.innerHTML = "<div style='color:#00ffcc;'>[데이터 탈취 성공]</div>대한민국 한자음으로 변환 중...";
-                
+                res.innerHTML = "<div style='color:#00ffcc;'>[데이터 탈취 성공]</div>한국어 한자음 변환 중...";
                 const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(cleanText)}`);
                 const transData = await transRes.json();
                 
                 let translated = "";
                 transData[0].forEach(item => { if(item[0]) translated += item[0]; });
 
-                // 4. 나나 전용 필터 (한자음 교정)
                 const filter = (t) => {
-                    return t.replace(/예천/g, "엽진")
-                            .replace(/공간을 찢고/g, "파공(破空)하여")
-                            .replace(/기운/g, "진기(眞氣)")
-                            .replace(/소염/g, "소염");
+                    return t.replace(/예천/g, "엽진").replace(/공간을 찢고/g, "파공(破空)하여").replace(/기운/g, "진기(眞氣)").replace(/소염/g, "소염");
                 };
 
                 res.innerHTML = `<div style="color:#00ffcc; font-size:12px; margin-bottom:15px;">[임무 완수: 지하 터널 통과]</div>` + filter(translated);
-
             } catch (e) {
-                console.error(e);
-                res.innerHTML = `<div style="color:#ffcc00; font-weight:bold;">[긴급] 터널 입구 차단</div><br>
-                                 주소가 올바른지 확인해 보시거나, 잠시 후 다시 시도해 주세요.<br>
-                                 적의 방화벽이 일시적으로 터널을 감시 중일 수 있습니다.`;
+                res.innerHTML = `<div style="color:#ffcc00;">[긴급] 터널 차단</div><br>주소를 확인하거나 잠시 후 다시 시도하세요.`;
             }
         }
     </script>
