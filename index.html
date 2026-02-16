@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>나나 연구실 - 57 & HJ OROW</title>
     <style>
+        /* [공통 스타일] */
         body { margin: 0; padding: 0; overflow: hidden; font-family: 'Apple SD Gothic Neo', sans-serif; background: #000; color: #fff; }
         .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s ease-in-out; }
-        #main-lab { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); }
+        
+        #main-lab { 
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); 
+            z-index: 10;
+        }
         
         .glass-panel { 
             background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
@@ -41,14 +46,16 @@
 
         .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         input, textarea { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 15px; font-size: 16px; width: 100%; box-sizing: border-box; }
+        textarea { height: 150px; }
         .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; }
 
         #result-area { 
             background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; 
             color: #ddd; font-size: 17px; min-height: 200px; border: 1px solid #222; margin-top: 10px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); white-space: pre-wrap;
         }
 
+        /* [모달 및 푸터] */
         .footer { position: absolute; bottom: 35px; text-align: center; width: 100%; z-index: 10; }
         .v-tag { color: rgba(0, 255, 204, 0.4); font-size: 11px; cursor: pointer; letter-spacing: 1px; }
 
@@ -60,91 +67,4 @@
 
     <div id="main-lab" class="screen">
         <div class="glass-panel">
-            <div class="signature-emblem"></div>
-            <h1 style="margin: 0; font-size: 26px; letter-spacing: -1px;">나나 연구실</h1>
-            <p style="color: #00ffcc; font-weight: bold; margin: 10px 0 35px 0; opacity: 0.8;">FOR 57 & HJ : OROW</p>
-            
-            <div class="icon-grid">
-                <div class="icon-btn" onclick="alert('데이터 수집 엔진 가동 준비 중...')">
-                    <div style="font-size: 32px;">📹</div>
-                    <div style="font-size: 13px; margin-top: 8px; color: #aaa;">동영상 수집</div>
-                </div>
-                <div class="icon-btn" onclick="toggleModule(true)">
-                    <div style="font-size: 32px;">📚</div>
-                    <div style="font-size: 13px; margin-top: 8px; font-weight: bold;">소설 번역기</div>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <div class="v-tag" onclick="toggleHistory(true)">── SYSTEM V2.6 HISTORY ──</div>
-        </div>
-    </div>
-
-    <div id="trans-module">
-        <div class="module-header">
-            <span style="color: #00ffcc; font-weight: bold; font-size: 18px;">NANA TRANSLATOR</span>
-            <button class="back-btn" onclick="toggleModule(false)">돌아가기</button>
-        </div>
-        <div class="trans-content">
-            <input type="text" id="target-url" placeholder="소설 주소(URL)를 입력하세요">
-            <textarea id="source-text" placeholder="또는 직접 원문을 붙여넣으세요..."></textarea>
-            <button class="action-btn" onclick="runSmartTrans()">엔진 가동 (대한민국 한자음)</button>
-            <div id="result-area">번역 대기 중...</div>
-        </div>
-    </div>
-
-    <div id="history-modal" onclick="toggleHistory(false)">
-        <div class="history-card" onclick="event.stopPropagation()">
-            <h3 style="color:#00ffcc; margin-top:0;">📜 연구실 기록</h3>
-            <div style="font-size:14px; color:#ccc; line-height:1.8;">
-                • <b>V2.6:</b> 지능형 소설 번역 엔진 탑재<br>
-                • <b>V2.5:</b> UI 복구 및 메인 복귀 기능<br>
-                • <b>V2.3:</b> 시그니처 인장(profile.png) 안착
-            </div>
-            <button style="width:100%; padding:15px; background:#333; color:#fff; border:none; border-radius:15px; margin-top:25px; font-weight:bold;" onclick="toggleHistory(false)">기록 닫기</button>
-        </div>
-    </div>
-
-    <script>
-        function toggleModule(s) { document.getElementById('trans-module').classList.toggle('active', s); }
-        function toggleHistory(s) { document.getElementById('history-modal').style.display = s ? 'flex' : 'none'; }
-
-        async function runSmartTrans() {
-            const url = document.getElementById('target-url').value;
-            const source = document.getElementById('source-text').value;
-            const res = document.getElementById('result-area');
-
-            if(!url && !source) return alert("입력값이 없습니다, 포비!");
-            
-            res.innerHTML = "<div style='color:#00ffcc;'>[나나 엔진 가동]</div>추출 및 한자음 정밀 분석 중...";
-
-            try {
-                let rawText = source;
-                if(url) {
-                    const fetchRes = await fetch(`https://r.jina.ai/${url}`);
-                    rawText = await fetchRes.text();
-                }
-
-                // 구글 번역 엔진 호출
-                const transRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(rawText)}`);
-                const transData = await transRes.json();
-                
-                let translated = "";
-                transData[0].forEach(item => { if(item[0]) translated += item[0]; });
-
-                // [나나 필터: 대한민국 한자음 교정기]
-                // 예: '예천' -> '엽진', '소염' -> '소염' 등 소설 특화 치환 로직 (확장 가능)
-                const filter = (t) => {
-                    return t.replace(/예천/g, "엽진")
-                            .replace(/공간을 찢고/g, "파공(破空)하여")
-                            .replace(/기운/g, "진기(眞氣)");
-                };
-
-                res.innerHTML = `<div style="color:#00ffcc; font-size:12px; margin-bottom:15px;">[정밀 번역 완료]</div>` + filter(translated);
-            } catch (e) {
-                res.innerText = "보안벽이 너무 높습니다. 본문을 복사해서 입력창에 넣어주세요!";
-            }
-        }
-    </script>
-</body>
-</html>
+            <div class="signature
