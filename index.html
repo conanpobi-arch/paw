@@ -20,9 +20,9 @@
         .back-btn { background: #333; border: none; color: #00ffcc; padding: 8px 15px; border-radius: 12px; font-weight: bold; }
         
         .trans-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        input { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 18px; font-size: 16px; width: 100%; box-sizing: border-box; }
+        textarea { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; padding: 18px; font-size: 16px; min-height: 150px; width: 100%; box-sizing: border-box; resize: none; }
         .action-btn { background: #00ffcc; color: #000; border: none; border-radius: 15px; padding: 18px; font-weight: bold; cursor: pointer; }
-        #result-area { background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; color: #ddd; font-size: 17px; min-height: 300px; border: 1px solid #222; white-space: pre-wrap; }
+        #result-area { background: #111; border-radius: 20px; padding: 25px; line-height: 1.9; color: #ddd; font-size: 17px; min-height: 200px; border: 1px solid #222; white-space: pre-wrap; }
         .v-tag { position: absolute; bottom: 35px; text-align: center; width: 100%; color: rgba(0, 255, 204, 0.4); font-size: 11px; }
     </style>
 </head>
@@ -34,68 +34,55 @@
             <h1>나나 연구실</h1>
             <p style="color: #00ffcc; font-weight: bold;">FOR 57 & HJ : OROW</p>
             <div class="icon-grid">
-                <div class="icon-btn" onclick="alert('데이터가 초기화되었습니다.')"><div style="font-size: 32px;">🔄</div><div style="font-size: 12px; margin-top: 8px; color:#aaa;">엔진 리셋</div></div>
-                <div class="icon-btn" onclick="toggleModule(true)"><div style="font-size: 32px;">📚</div><div style="font-size: 12px; margin-top: 8px; font-weight: bold; color:#00ffcc;">소설 번역기</div></div>
+                <div class="icon-btn" onclick="window.open('https://translate.google.com')"><div style="font-size: 32px;">🌐</div><div style="font-size: 12px; margin-top: 8px; color:#aaa;">외부 워프</div></div>
+                <div class="icon-btn" onclick="toggleModule(true)"><div style="font-size: 32px;">📚</div><div style="font-size: 12px; margin-top: 8px; font-weight: bold; color:#00ffcc;">나나 디코더</div></div>
             </div>
         </div>
-        <div class="v-tag">── SYSTEM V14.0 ZERO BOUNDARY ──</div>
+        <div class="v-tag">── SYSTEM V15.0 HYBRID DECODER ──</div>
     </div>
 
     <div id="trans-module">
         <div class="module-header">
-            <span style="color: #00ffcc; font-weight: bold;">ZERO BOUNDARY ENGINE</span>
+            <span style="color: #00ffcc; font-weight: bold;">NANA HYBRID DECODER</span>
             <button class="back-btn" onclick="toggleModule(false)">기지 복귀</button>
         </div>
         <div class="trans-content">
-            <input type="text" id="target-url" placeholder="중국 소설 주소 입력">
-            <button class="action-btn" onclick="runZeroBoundary()">강제 데이터 인출</button>
-            <div id="result-area">빙(Bing)의 유령을 제거했습니다. 입력을 대기합니다.</div>
+            <p style="font-size:12px; color:#888;">소설 사이트의 본문을 복사해서 아래에 붙여넣으세요.<br>나나 전용 한자음 필터가 즉시 적용됩니다.</p>
+            <textarea id="raw-input" placeholder="여기에 소설 본문을 붙여넣으세요..."></textarea>
+            <button class="action-btn" onclick="decodeText()">나나 필터 가동</button>
+            <div id="result-area">텍스트 입력을 대기 중입니다.</div>
         </div>
     </div>
 
     <script>
         function toggleModule(s) { document.getElementById('trans-module').classList.toggle('active', s); }
 
-        async function runZeroBoundary() {
-            const urlInput = document.getElementById('target-url');
+        async function decodeText() {
+            const input = document.getElementById('raw-input').value;
             const res = document.getElementById('result-area');
-            if(!urlInput.value) return alert("주소를 입력하세요!");
+            if(!input) return alert("복사한 텍스트를 넣어주세요!");
 
-            res.innerHTML = "<div style='color:#00ffcc;'>[인출 중] 보안 필터를 역우회하여 침투 중...</div>";
+            res.innerHTML = "<div style='color:#00ffcc;'>[디코딩] 나나 고유 한자음 및 문맥 교정 중...</div>";
 
             try {
-                const target = urlInput.value.trim();
-                
-                // [V14.0 핵심] 빙/구글 흔적을 모두 지운 순수 우회 엔진 (AllOrigins 재설계)
-                // 브라우저의 캐시 방지를 위해 랜덤 쿼리를 추가합니다.
-                const crackUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}&_=${Date.now()}`;
-                
-                const response = await fetch(crackUrl);
-                const data = await response.json();
-                
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
-                
-                // 텍스트 추출 정밀화 (보안용 투명 텍스트 제거)
-                doc.querySelectorAll('script, style, iframe, ads, .ads, #ads').forEach(el => el.remove());
-                let rawText = doc.body.innerText.replace(/\s+/g, ' ').trim().substring(0, 4000);
-
-                if(rawText.length < 50) throw new Error("인출 실패 (사이트가 비어있음)");
-
-                res.innerHTML = "<div style='color:#00ffcc;'>[데이터 정제] 나나 특수 필터 적용 중...</div>";
-
-                // 구글 공식 번역 API (익명 통로)
-                const trRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(rawText)}`);
+                // 구글 번역 엔진 호출 (텍스트 직접 전달 방식은 차단되지 않음)
+                const trRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=${encodeURIComponent(input.substring(0, 4500))}`);
                 const trData = await trRes.json();
                 let translated = trData[0].map(x => x[0]).join('');
 
-                // 한자음 교정 (엽진, 진기 등)
-                const filter = (t) => t.replace(/예천/g, "엽진").replace(/공간을 찢고/g, "파공(破空)하여").replace(/기운/g, "진기(眞氣)");
+                // 나나 연구실 전용 팩트체크 및 한자음 필터
+                const filter = (t) => t
+                    .replace(/예천/g, "엽진")
+                    .replace(/공간을 찢고/g, "파공(破空)하여")
+                    .replace(/기운/g, "진기(眞氣)")
+                    .replace(/소염/g, "소염")
+                    .replace(/진격/g, "돌파")
+                    .replace(/노인/g, "장로");
 
-                res.innerHTML = `<div style="color:#00ffcc; font-size:11px; margin-bottom:10px;">[침투 성공]</div>` + filter(translated);
+                res.innerHTML = `<div style="color:#00ffcc; font-size:11px; margin-bottom:10px;">[디코딩 성공]</div>` + filter(translated);
 
             } catch (e) {
-                res.innerHTML = `<div style="color:#ffcc00;">[침투 중단]</div><br>${e.message}<br><br><span style="color:#888; font-size:13px;">이것마저 실패한다면 소설 사이트가 '봇 전용 방화벽'을 켠 것입니다. 그록에게 SOS를 칠 시간입니다!</span>`;
+                res.innerHTML = `<div style="color:#ffcc00;">[오류]</div><br>번역 엔진 연결에 실패했습니다. 잠시 후 다시 시도하세요.`;
             }
         }
     </script>
