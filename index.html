@@ -37,44 +37,42 @@
             <h1>나나 연구실</h1>
             <p style="color: #00ffcc; font-weight: bold;">FOR 57 & HJ : OROW</p>
             <div class="icon-grid">
-                <div class="icon-btn" onclick="alert('기록 보관소 대기 중...')"><div style="font-size: 32px;">📜</div><div style="font-size: 12px; margin-top: 8px; color:#aaa;">기록 보관</div></div>
+                <div class="icon-btn" onclick="alert('히스토리 복구 중...')"><div style="font-size: 32px;">📜</div><div style="font-size: 12px; margin-top: 8px; color:#aaa;">기록 보관</div></div>
                 <div class="icon-btn" onclick="toggleModule(true)"><div style="font-size: 32px;">📚</div><div style="font-size: 12px; margin-top: 8px; font-weight: bold; color:#00ffcc;">소설 번역기</div></div>
             </div>
         </div>
-        <div class="v-tag">── SYSTEM V11.0 UNDERGROUND ──</div>
+        <div class="v-tag">── SYSTEM V12.0 BLACKBOX ──</div>
     </div>
 
     <div id="trans-module">
         <div class="module-header">
-            <span style="color: #00ffcc; font-weight: bold;">UNDERGROUND BYPASS</span>
+            <span style="color: #00ffcc; font-weight: bold;">BLACKBOX WARP</span>
             <button class="back-btn" onclick="toggleModule(false)">기지 복귀</button>
         </div>
         <div class="input-bar">
             <input type="text" id="target-url" placeholder="소설 주소를 입력하세요">
-            <button class="go-btn" onclick="runUnderground()">지하 터널 번역 가동</button>
+            <button class="go-btn" onclick="runBlackbox()">블랙박스 번역 가동</button>
         </div>
         <div id="viewer-container">
-            <iframe id="novel-frame" src="about:blank"></iframe>
+            <iframe id="novel-frame" name="novel-frame" src="about:blank"></iframe>
         </div>
     </div>
 
     <script>
         function toggleModule(s) { document.getElementById('trans-module').classList.toggle('active', s); }
 
-        function runUnderground() {
+        function runBlackbox() {
             const urlInput = document.getElementById('target-url');
             const frame = document.getElementById('novel-frame');
             if(!urlInput.value) return alert("주소를 입력하세요!");
 
             const target = urlInput.value.trim();
             
-            // [V11.0 핵심] 지역 차단이 없는 글로벌 프록시 엔진 3중 교차 투입
-            // 1순위: Croxy (가장 강력함)
-            const proxyTarget = "https://www.croxyproxy.com/_zh/gateway?url=" + btoa(target);
+            // [V12.0 핵심] 구글 대신 MS Bing 번역 게이트웨이를 사용
+            // 지역 제한을 피하고 브라우저가 '신뢰하는 사이트'로 인식하게 만듭니다.
+            const bingWarp = `https://www.bing.com/translator/?to=ko&url=${encodeURIComponent(target)}`;
             
-            // 번역은 사이트가 뜬 후, 브라우저 자체 번역 기능을 사용하거나 
-            // 사이트 내의 번역 버튼을 활용하는 것이 가장 안전합니다.
-            frame.src = proxyTarget;
+            frame.src = bingWarp;
         }
     </script>
 </body>
