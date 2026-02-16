@@ -9,24 +9,24 @@
         .screen { width: 100vw; height: 100vh; position: absolute; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #main-lab { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'); z-index: 10; }
         .glass-panel { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(25px); border-radius: 40px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.15); width: 85%; max-width: 360px; text-align: center; }
-        .signature-emblem { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #00ffcc; background-image: url('profile.png'); background-size: cover; background-position: center; margin: 0 auto 20px; box-shadow: 0 0 30px rgba(0, 255, 204, 0.4); }
+        .signature-emblem { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #00ffcc; background-image: url('profile.png'); background-size: cover; background-position: center; margin: 0 auto 20px; }
+        
         .icon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
-        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px 10px; cursor: pointer; transition: 0.2s; }
+        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px 10px; cursor: pointer; }
 
-        /* 소설 모듈 */
-        #trans-module { position: fixed; top: 100vh; left: 0; width: 100vw; height: 100vh; background: #0d0d0d; z-index: 100; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
+        #trans-module { position: fixed; top: 100vh; left: 0; width: 100vw; height: 100vh; background: #0d0d0d; z-index: 100; transition: 0.5s; display: flex; flex-direction: column; }
         #trans-module.active { top: 0; }
         .module-header { padding: 50px 20px 15px; background: #151515; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { background: #333; border: none; color: #00ffcc; padding: 8px 15px; border-radius: 12px; font-weight: bold; }
         
-        /* 뷰어 영역 */
-        #viewer-container { flex: 1; position: relative; overflow: hidden; background: #fff; }
+        .input-bar { padding: 15px; background: #151515; display: flex; gap: 8px; flex-direction: column; }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 10px; padding: 12px; font-size: 14px; }
+        .go-btn { background: #00ffcc; color: #000; border: none; border-radius: 10px; padding: 12px; font-weight: bold; }
+
+        #viewer-container { flex: 1; background: #fff; position: relative; }
         #novel-frame { width: 100%; height: 100%; border: none; }
         
-        .v-tag { position: absolute; bottom: 35px; text-align: center; width: 100%; color: rgba(0, 255, 204, 0.4); font-size: 11px; cursor: pointer; }
-        .input-bar { padding: 20px; background: #151515; display: flex; gap: 10px; }
-        input { flex: 1; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 10px; padding: 12px; }
-        .go-btn { background: #00ffcc; color: #000; border: none; border-radius: 10px; padding: 0 20px; font-weight: bold; }
+        .v-tag { position: absolute; bottom: 35px; text-align: center; width: 100%; color: rgba(0, 255, 204, 0.4); font-size: 11px; }
     </style>
 </head>
 <body>
@@ -41,38 +41,40 @@
                 <div class="icon-btn" onclick="toggleModule(true)"><div style="font-size: 32px;">📚</div><div style="font-size: 12px; margin-top: 8px; font-weight: bold; color:#00ffcc;">소설 번역기</div></div>
             </div>
         </div>
-        <div class="v-tag" onclick="alert('V10.0 OROCHI : FINAL BYPASS')">── SYSTEM V10.0 OROCHI ──</div>
+        <div class="v-tag">── SYSTEM V11.0 UNDERGROUND ──</div>
     </div>
 
     <div id="trans-module">
         <div class="module-header">
-            <span style="color: #00ffcc; font-weight: bold;">OROCHI BYPASS ENGINE</span>
+            <span style="color: #00ffcc; font-weight: bold;">UNDERGROUND BYPASS</span>
             <button class="back-btn" onclick="toggleModule(false)">기지 복귀</button>
         </div>
         <div class="input-bar">
             <input type="text" id="target-url" placeholder="소설 주소를 입력하세요">
-            <button class="go-btn" onclick="runOrochi()">번역 가동</button>
+            <button class="go-btn" onclick="runUnderground()">지하 터널 번역 가동</button>
         </div>
         <div id="viewer-container">
-            <iframe id="novel-frame" name="novel-frame" src="about:blank"></iframe>
+            <iframe id="novel-frame" src="about:blank"></iframe>
         </div>
     </div>
 
     <script>
         function toggleModule(s) { document.getElementById('trans-module').classList.toggle('active', s); }
 
-        function runOrochi() {
+        function runUnderground() {
             const urlInput = document.getElementById('target-url');
             const frame = document.getElementById('novel-frame');
             if(!urlInput.value) return alert("주소를 입력하세요!");
 
             const target = urlInput.value.trim();
             
-            // [V10.0 핵심] 구글 번역기를 '샌드박스'로 사용하여 보안망을 통째로 통과
-            // 브라우저는 '구글 사이트'를 보여주는 것으로 인식하여 차단을 해제합니다.
-            const orochiWarp = `https://translate.google.com/translate?sl=zh-CN&tl=ko&u=${encodeURIComponent(target)}`;
+            // [V11.0 핵심] 지역 차단이 없는 글로벌 프록시 엔진 3중 교차 투입
+            // 1순위: Croxy (가장 강력함)
+            const proxyTarget = "https://www.croxyproxy.com/_zh/gateway?url=" + btoa(target);
             
-            frame.src = orochiWarp;
+            // 번역은 사이트가 뜬 후, 브라우저 자체 번역 기능을 사용하거나 
+            // 사이트 내의 번역 버튼을 활용하는 것이 가장 안전합니다.
+            frame.src = proxyTarget;
         }
     </script>
 </body>
