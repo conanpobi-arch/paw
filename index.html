@@ -28,7 +28,6 @@
 
         .sub-title { color: #00ffcc; font-weight: bold; margin: 5px 0 25px 0; font-size: 13px; letter-spacing: 2px; }
 
-        /* 하이패스 메뉴 */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .menu-item { 
             background: rgba(255, 255, 255, 0.05); border-radius: 22px; padding: 22px 10px;
@@ -38,9 +37,22 @@
         .menu-item i { font-size: 28px; display: block; margin-bottom: 8px; }
         .menu-item span { font-size: 11px; color: rgba(255,255,255,0.7); }
 
-        /* 하단 히스토리 (불변) */
+        /* [불변] 하단 히스토리 태그 */
         .footer { position: absolute; bottom: 35px; text-align: center; width: 100%; cursor: pointer; }
-        .history-tag { color: rgba(0, 255, 204, 0.3); font-size: 10px; font-weight: bold; }
+        .history-tag { color: rgba(0, 255, 204, 0.3); font-size: 10px; font-weight: bold; letter-spacing: 1.5px; }
+
+        /* 히스토리 오버레이 */
+        #history-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center;
+            backdrop-filter: blur(15px);
+        }
+        .history-card {
+            background: rgba(20, 20, 20, 0.9); width: 85%; max-height: 70vh; border-radius: 35px; 
+            padding: 30px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto;
+        }
+        .history-line { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: #aaa; }
+        .history-line b { color: #00ffcc; }
     </style>
 </head>
 <body>
@@ -52,13 +64,13 @@
             <div class="sub-title">57 & HJ : OROW</div>
             
             <div class="menu-grid">
-                <div class="menu-item" onclick="openHighpass()">
-                    <i>🚀</i><span>하이패스 게이트</span>
+                <div class="menu-item" onclick="openNovelTranslator()">
+                    <i>📚</i><span>소설 번역기</span>
                 </div>
-                <div class="menu-item" onclick="alert('아카이브 동기화 중...')">
+                <div class="menu-item" onclick="alert('영상 수집 엔진 준비 중...')">
                     <i>📹</i><span>영상 수집</span>
                 </div>
-                <div class="menu-item" onclick="alert('메모리 뱅크 연결 중...')">
+                <div class="menu-item" onclick="alert('추억 보관함 동기화 중...')">
                     <i>📷</i><span>추억 보관</span>
                 </div>
                 <div class="menu-item" onclick="location.reload()">
@@ -67,20 +79,39 @@
             </div>
         </div>
         
-        <div class="footer">
-            <div class="history-tag">── SYSTEM V1.3 HIPASS ──</div>
+        <div class="footer" onclick="toggleHistory(true)">
+            <div class="history-tag">── SYSTEM V1.3.1 HISTORY ──</div>
+        </div>
+    </div>
+
+    <div id="history-overlay" onclick="toggleHistory(false)">
+        <div class="history-card" onclick="event.stopPropagation()">
+            <h2 style="color:#00ffcc; margin-top:0; font-size:20px;">📜 기지 연대기</h2>
+            <div class="history-line"><b>V1.3.1:</b> 히스토리 전면 복원 및 소설 번역기 이름 고정</div>
+            <div class="history-line"><b>V1.2.2:</b> 투명 레이어(Crystal Hull) 디자인 적용</div>
+            <div class="history-line"><b>V1.2.1:</b> 우주 배경 경로 최적화 및 복구</div>
+            <div class="history-line"><b>V1.2:</b> 밤하늘 우주 배경 1차 적용</div>
+            <div class="history-line"><b>V1.1:</b> 시그니처 및 하단 히스토리 시스템 구축</div>
+            <div class="history-line"><b>V1.0:</b> 오리지널 베이스캠프 재건</div>
+            <div class="history-line"><b>PAST:</b> 번역 엔진(V8~15) 우회 실험 및 아바커스 분석</div>
+            <button onclick="toggleHistory(false)" style="width:100%; background:rgba(0,255,204,0.1); color:#00ffcc; border:1px solid #00ffcc; padding:15px; border-radius:18px; margin-top:20px; font-weight:bold;">기지로 돌아가기</button>
         </div>
     </div>
 
     <script>
-        function openHighpass() {
-            const url = prompt("아바커스 엔진급 우회 접속을 시작합니다.\n주소를 입력하세요:", "https://m.qidian.com");
-            if(url) {
-                // 아바커스가 사용하는 서버 우회 방식과 유사한 구글 번역 프록시 터널
-                // 이 방식은 소설 사이트의 방화벽을 구글 서버의 IP로 속여서 통과합니다.
-                const bypassUrl = `https://translate.google.com/translate?sl=zh-CN&tl=ko&u=${encodeURIComponent(url)}`;
-                window.location.href = bypassUrl;
-            }
+        function toggleHistory(s) { document.getElementById('history-overlay').style.display = s ? 'flex' : 'none'; }
+
+        function openNovelTranslator() {
+            const target = prompt("번역할 소설 주소를 입력하세요:", "https://m.qidian.com");
+            if(!target) return;
+
+            // [구현 고민의 결과] 아바커스처럼 강력한 '서버'가 없을 때의 최선책:
+            // 1. 구글 번역 프록시 터널을 1순위로 사용 (가장 안정적)
+            // 2. 만약 사이트가 iframe을 거부하면, 새 창으로 구글 번역 페이지를 강제 실행
+            const engine1 = `https://translate.google.com/translate?sl=zh-CN&tl=ko&u=${encodeURIComponent(target)}`;
+            
+            // 포비의 사용자 경험을 위해 새 창에서 번역 엔진 가동
+            window.open(engine1, '_blank');
         }
     </script>
 </body>
