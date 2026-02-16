@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>나나 연구실 V5.0 - Original Look</title>
+    <title>나나 연구실 V5.0 - REBORN</title>
     <style>
         :root { --neon: #00ffcc; --bg: #0d0d0d; }
         body { 
@@ -11,7 +11,6 @@
             font-family: 'Apple SD Gothic Neo', sans-serif;
             display: flex; align-items: center; justify-content: center; height: 100vh;
         }
-
         .container {
             width: 90%; max-width: 400px;
             background: rgba(255, 255, 255, 0.05);
@@ -20,8 +19,6 @@
             text-align: center; backdrop-filter: blur(20px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
-
-        /* 깃허브 profile.png 중앙 배치 */
         .profile-img {
             width: 100px; height: 100px;
             border-radius: 50%; border: 2px solid var(--neon);
@@ -30,35 +27,27 @@
             background-size: cover; background-position: center;
             box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
         }
-
         h2 { font-size: 22px; margin-bottom: 25px; font-weight: 300; letter-spacing: -1px; }
-
         textarea { 
             width: 100%; height: 130px; background: rgba(0,0,0,0.3); border: 1px solid #333;
             border-radius: 15px; color: #fff; padding: 15px; box-sizing: border-box; 
             font-size: 15px; outline: none; margin-bottom: 12px;
         }
-
-        /* 유틸리티 버튼 세트 */
         .util-btns { display: flex; gap: 5px; margin-bottom: 15px; }
         .u-btn { 
             flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; border: 1px solid #444;
             background: rgba(255,255,255,0.05); color: #aaa; cursor: pointer;
         }
         .u-btn:hover { background: var(--neon); color: #000; border-color: var(--neon); }
-
         .btn-main { 
             background: var(--neon); color: #000; border: none; border-radius: 15px;
             padding: 18px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px;
         }
-
         #output { 
             display: none; background: rgba(0, 255, 204, 0.05); border: 1px solid var(--neon);
             padding: 15px; border-radius: 15px; text-align: left; font-size: 15px;
             max-height: 200px; overflow-y: auto; margin-top: 15px; line-height: 1.8;
         }
-
-        /* 4대 앱 아이콘 (소설, 동영상, 모아듣기, 미제) */
         .bottom-nav {
             display: flex; justify-content: space-around; margin-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
@@ -90,8 +79,8 @@
 
     <div class="bottom-nav">
         <a href="#" class="nav-link"><span>📚</span>소설 번역기</a>
-        <a href="#" class="nav-link" onclick="alert('동영상 다운로더 준비 중')"><span>🎥</span>동영상 다운</a>
-        <a href="#" class="nav-link" onclick="alert('모아듣기 시스템 준비 중')"><span>🎧</span>모아듣기</a>
+        <a href="#" class="nav-link"><span>🎥</span>동영상 다운</a>
+        <a href="#" class="nav-link"><span>🎧</span>모아듣기</a>
         <a href="#" class="nav-link"><span>❓</span>미제</a>
     </div>
 </div>
@@ -119,25 +108,38 @@
         if(!text) return;
 
         btn.disabled = true; btn.innerText = "분석 중...";
-        out.style.display = "block"; out.innerText = "나나 엔진이 고전의 길을 여는 중...";
+        out.style.display = "block"; out.innerText = "엔진 가동 중...";
 
-        try {
-            // 포비가 성공한 2.5 호환 경로 고정
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
-            const resp = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `[지침: 무협 전문 번역, No Omission, 대한민국 한자음]\n\n${text}` }] }]
-                })
-            });
-            const data = await resp.json();
-            out.innerText = data.candidates[0].content.parts[0].text;
-            btn.innerText = "나나 엔진 기동 완료";
-        } catch (e) {
-            out.innerText = "오류: 엔진 연결을 확인하세요.";
+        // [핵심] 아까 성공했던 두 가지 후보군을 순차적으로 시도
+        const models = ['gemini-1.5-flash', 'gemini-2.0-flash-exp'];
+        let success = false;
+
+        for (let model of models) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `당신은 전문 번역가입니다. 무협 소설의 문체를 살려 번역하되, 한 문장도 빼놓지 마십시오. 한자음은 한국식으로 표기하십시오.\n\n${text}` }] }]
+                    })
+                });
+                const data = await resp.json();
+                
+                if (resp.ok) {
+                    out.innerText = data.candidates[0].content.parts[0].text;
+                    btn.innerText = "나나 엔진 기동 완료";
+                    success = true;
+                    break; 
+                }
+            } catch (e) { console.error(`${model} 시도 중 에러 발생`); }
+        }
+
+        if (!success) {
+            out.innerText = "오류: 모든 엔진 경로가 응답하지 않습니다. 모델 ID를 확인하세요.";
             btn.innerText = "재시도";
-        } finally { btn.disabled = false; }
+        }
+        btn.disabled = false;
     }
 </script>
 </body>
