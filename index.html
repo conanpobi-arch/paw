@@ -3,26 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA LAB V44.0</title>
+<title>NANA LAB V44.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  
-  body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; touch-action: manipulation; }
+  body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
   
   #galaxy-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); overflow: hidden; }
   .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-  /* 🌠 광역 유성 애니메이션 */
-  .shooting-star {
-    position: absolute; height: 2px;
-    background: linear-gradient(-45deg, rgba(95, 255, 224, 1), rgba(0, 0, 255, 0));
-    border-radius: 999px; filter: drop-shadow(0 0 8px rgba(105, 234, 255, 1));
-    animation: tail 4s ease-in-out infinite, shooting 4s linear infinite;
-    z-index: 0;
-  }
+  /* 🌠 광역 유성 */
+  .shooting-star { position: absolute; height: 2px; background: linear-gradient(-45deg, rgba(95, 255, 224, 1), rgba(0, 0, 255, 0)); border-radius: 999px; filter: drop-shadow(0 0 8px rgba(105, 234, 255, 1)); animation: tail 4s ease-in-out infinite, shooting 4s linear infinite; z-index: 0; }
   @keyframes tail { 0% { width: 0; } 20% { width: 200px; } 100% { width: 0; } }
   @keyframes shooting { 0% { transform: translateX(0) translateY(0) rotate(20deg); opacity: 1; } 100% { transform: translateX(-1200px) translateY(400px) rotate(20deg); opacity: 0; } }
 
@@ -31,34 +24,20 @@
   h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 40px; flex-shrink: 0; }
 
   #content-area { flex: 1; overflow-y: auto; padding-bottom: 30px; -webkit-overflow-scrolling: touch; }
-  .dashboard { display: flex; justify-content: center; gap: 20px; margin-top: 50px; }
-  .app-icon { width: 100px; cursor: pointer; }
-  .icon-circle { width: 70px; height: 70px; border-radius: 20px; border: 1px solid var(--border); background: rgba(0,255,204,0.05); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 10px; }
-
   #translator-page { display: none; text-align: left; animation: fadeIn 0.3s ease; }
   .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
   .nav-tool { font-size: 24px; cursor: pointer; opacity: 0.8; }
 
   .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 15px; padding: 25px; backdrop-filter: blur(15px); position: relative; }
-  input, textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 16px; font-size: 15px; outline: none; margin-bottom: 15px; }
-  textarea { height: 280px; }
+  textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 16px; font-size: 15px; outline: none; margin-bottom: 15px; height: 280px; resize: none; }
+  input[type="password"] { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 16px; font-size: 15px; outline: none; margin-bottom: 15px; }
 
-  /* 📍 중앙 로딩 시스템 */
-  #loading-overlay { 
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .main-loader {
-    width: 60px; height: 60px; border: 5px solid rgba(0,255,204,0.1);
-    border-top: 5px solid var(--neon); border-radius: 50%;
-    animation: spin 1s linear infinite; box-shadow: 0 0 15px var(--neon); margin-bottom: 20px;
-  }
-  #loading-msg { font-size: 14px; color: var(--neon); letter-spacing: 1px; font-weight: bold; text-align: center; }
+  /* 📍 중앙 로딩 오버레이 */
+  #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+  .main-loader { width: 60px; height: 60px; border: 5px solid rgba(0,255,204,0.1); border-top: 5px solid var(--neon); border-radius: 50%; animation: spin 1s linear infinite; box-shadow: 0 0 15px var(--neon); margin-bottom: 25px; }
+  #loading-msg { font-size: 15px; color: var(--neon); letter-spacing: 1px; font-weight: bold; text-align: center; line-height: 1.6; }
 
-  .btn-fire { 
-    width: 100%; padding: 20px; background: linear-gradient(135deg, var(--neon), #00b4ff); 
-    color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer;
-  }
+  .btn-fire { width: 100%; padding: 20px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
   .btn-fire:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .recharge-container { width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 10px; border-radius: 2px; display: none; }
@@ -66,10 +45,9 @@
 
   #res-box { margin-top: 25px; background: rgba(0,10,25,0.95); border: 1px solid var(--border); border-radius: 15px; padding: 30px; font-family: 'Noto Serif KR', serif; line-height: 2.0; font-size: 18px; color: #eee; display: none; }
 
-  /* 버전 히스토리 고정 하단 */
   .history-wrapper { margin-top: auto; padding-top: 20px; flex-shrink: 0; z-index: 10; }
   .history-toggle { display: inline-block; cursor: pointer; color: var(--neon); font-size: 10px; opacity: 0.5; padding: 6px 18px; border: 1px solid var(--border); border-radius: 20px; background: rgba(0,0,0,0.8); }
-  #history-content { display: none; margin-top: 15px; text-align: left; opacity: 0.7; font-size: 10px; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; }
+  #history-content { display: none; margin-top: 15px; text-align: left; opacity: 0.7; font-size: 10px; max-height: 180px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; }
   .hist-item { display: flex; margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,204,0.05); }
   .hist-ver { color: var(--neon); min-width: 55px; font-weight: bold; }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -81,12 +59,12 @@
 
 <div id="loading-overlay">
   <div class="main-loader"></div>
-  <div id="loading-msg">기지 심연 분석 중...</div>
+  <div id="loading-msg">기지 엔진 가동 중...</div>
 </div>
 
 <div class="container">
   <div class="couple-main"></div>
-  <h1 id="title-text">NANA LAB <span>V44.0</span></h1>
+  <h1 id="title-text">NANA LAB <span>V44.2</span></h1>
 
   <div id="content-area">
     <div id="main-lobby">
@@ -106,8 +84,7 @@
         <div class="nav-tool" onclick="clearAll(event)">🗑️</div>
       </div>
       <div class="card" onclick="event.stopPropagation()">
-        <input type="text" id="urlInput" placeholder="URL 또는 원문을 입력하세요...">
-        <textarea id="textInput" style="display:none;"></textarea>
+        <textarea id="mainInput" placeholder="URL 링크 또는 번역할 원문을 입력하세요..."></textarea>
         <input type="password" id="apiKey" placeholder="API KEY">
         <button class="btn-fire" id="fireBtn" onclick="fireEngine()"><span id="btnText">FIRE ENGINE</span></button>
         <div class="recharge-container" id="rechargeContainer"><div class="recharge-bar" id="rechargeBar"></div></div>
@@ -119,31 +96,24 @@
   <div class="history-wrapper">
     <div class="history-toggle" onclick="toggleHistory(event)">VIEW VERSION HISTORY</div>
     <div id="history-content" onclick="event.stopPropagation()">
+      <div class="hist-item"><span class="hist-ver">V44.2</span> 링크 입력 시에만 8대 우회 방식 모드 활성화 패치</div>
+      <div class="hist-item"><span class="hist-ver">V44.1</span> 할루시네이션 원인 분석 및 데이터 무결성 리포트</div>
       <div class="hist-item"><span class="hist-ver">V44.0</span> 중앙 로더 탑재 및 8대 우회 방식 모니터링 시스템</div>
       <div class="hist-item"><span class="hist-ver">V43.9</span> 실시간 리차지 바 및 로딩 인디케이터</div>
       <div class="hist-item"><span class="hist-ver">V43.8</span> 홈/지우기 아이콘, 입력창 확대, 광역 유성</div>
-      <div class="hist-item"><span class="hist-ver">V43.7</span> 유성우(Shooting Stars) 배경 엔진 가동</div>
+      <div class="hist-item"><span class="hist-ver">V43.7</span> 유성우 배경 엔진 가동</div>
       <div class="hist-item"><span class="hist-ver">V43.6</span> 스마트 클로즈 및 모바일 흔들림 방지</div>
       <div class="hist-item"><span class="hist-ver">V43.5</span> 모바일 레이아웃 고정 패치</div>
       <div class="hist-item"><span class="hist-ver">V43.4</span> 2026 gemini-2.5-flash 탑재</div>
-      <div class="hist-item"><span class="hist-ver">V43.3</span> 모델 ID 강제 지정 시도</div>
-      <div class="hist-item"><span class="hist-ver">V43.2</span> 엔진 경로 v1beta 복구 시도</div>
-      <div class="hist-item"><span class="hist-ver">V43.1</span> 모델 식별자 패치</div>
+      <div class="hist-item"><span class="hist-ver">V43.3</span> 모델 ID 강제 지정</div>
     </div>
   </div>
 </div>
 
 <script>
-  // 📍 8대 우회 방식 데이터
   const bypassMethods = [
-    "클로드 프로토콜 우회",
-    "다중 세션 분산 크롤링",
-    "헤드리스 브라우저 난독화",
-    "동적 프록시 로테이션",
-    "User-Agent 핑거프린팅 무력화",
-    "JS 렌더링 우회 수집",
-    "캡차 바이패스 로직 가동",
-    "데이터 스트림 패킷 재조합"
+    "클로드 프로토콜 우회", "다중 세션 분산 크롤링", "헤드리스 브라우저 난독화", "동적 프록시 로테이션",
+    "User-Agent 핑거프린팅 무력화", "JS 렌더링 우회 수집", "캡차 바이패스 로직 가동", "데이터 스트림 패킷 재조합"
   ];
 
   function toggleHistory(e) {
@@ -164,7 +134,7 @@
 
   function clearAll(e) {
     if(e) e.stopPropagation();
-    document.getElementById('urlInput').value = '';
+    document.getElementById('mainInput').value = '';
     document.getElementById('res-box').innerText = '';
     document.getElementById('res-box').style.display = 'none';
   }
@@ -182,42 +152,52 @@
     if(e) e.stopPropagation();
     document.getElementById('main-lobby').style.display = 'flex';
     document.getElementById('translator-page').style.display = 'none';
-    document.getElementById('title-text').innerHTML = "NANA LAB <span>V44.0</span>";
+    document.getElementById('title-text').innerHTML = "NANA LAB <span>V44.2</span>";
   }
 
   async function fireEngine() {
     const key = document.getElementById('apiKey').value.trim();
-    const content = document.getElementById('urlInput').value.trim();
+    const inputVal = document.getElementById('mainInput').value.trim();
     const overlay = document.getElementById('loading-overlay');
     const msg = document.getElementById('loading-msg');
     const btn = document.getElementById('fireBtn');
     const rCont = document.getElementById('rechargeContainer');
     const rBar = document.getElementById('rechargeBar');
 
-    if(!key || !content) return alert("데이터를 입력하세요!");
+    if(!key || !inputVal) return alert("데이터를 입력하세요!");
+    localStorage.setItem('nana_gemini_key', key);
 
-    // 📍 중앙 로딩 시작
+    // 📍 링크 여부 판별
+    const isLink = inputVal.toLowerCase().startsWith('http');
     overlay.style.display = 'flex';
-    let msgIdx = 0;
-    const msgInterval = setInterval(() => {
-      msg.innerHTML = `기지 심연 분석 중 - <span style="color:#fff">${bypassMethods[msgIdx % 8]}</span>`;
-      msgIdx++;
-    }, 800);
+    
+    let msgInterval;
+    if (isLink) {
+      // 🔗 크롤링 모드: 8대 우회 방식 회전
+      let msgIdx = 0;
+      msgInterval = setInterval(() => {
+        msg.innerHTML = `기지 심연 분석 중 - <span style="color:#fff">${bypassMethods[msgIdx % 8]}</span>`;
+        msgIdx++;
+      }, 800);
+    } else {
+      // ✍️ 일반 번역 모드
+      msg.innerHTML = "기지 엔진이 원문을 <span style='color:#fff'>정밀 번역 중</span>입니다...";
+    }
 
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: `시스템: 소설 전문 번역가. 중국 발음 금지. 내용: ${content}` }] }] })
+        body: JSON.stringify({ contents: [{ parts: [{ text: `시스템: 소설 전문 번역가. 중국 발음 금지. 내용: ${inputVal}` }] }] })
       });
       const data = await response.json();
       const resBox = document.getElementById('res-box');
       resBox.style.display = 'block';
-      resBox.innerText = data.candidates ? data.candidates[0].content.parts[0].text : "에러 발생";
+      resBox.innerText = data.candidates ? data.candidates[0].content.parts[0].text : "에러: " + data.error.message;
     } catch(e) {
-      alert("엔진 가동 실패");
+      alert("기지 통신 실패");
     } finally {
-      clearInterval(msgInterval);
+      if(msgInterval) clearInterval(msgInterval);
       overlay.style.display = 'none';
       btn.disabled = true;
       rCont.style.display = 'block';
@@ -236,7 +216,7 @@
     }
   }
 
-  // 배경 별 및 유성 로직 (생략/유지)
+  // 배경 로직
   const bg = document.getElementById('galaxy-bg');
   for(let i=0; i<150; i++){
     const s = document.createElement('div'); s.className = 'star';
