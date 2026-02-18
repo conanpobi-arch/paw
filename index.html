@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>NANA LAB V38.4 - 조메이: 모신병거</title>
+    <title>NANA LAB V38.6 - 조메이: 모신병거</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00ffcc; --paper: #000b1a; --border: rgba(0, 255, 204, 0.2); }
@@ -32,8 +32,8 @@
     <div class="container">
         <header>
             <div class="couple-main"></div>
-            <h1>NANA LAB <span>V38.4</span></h1>
-            <div class="version-tag">STATION: GEMINI HYBRID (AUTO-SCAN)</div>
+            <h1>NANA LAB <span>V38.6</span></h1>
+            <div class="version-tag">STATION: GEMINI 3 FLASH READY</div>
         </header>
         <div class="card">
             <label>API KEY</label>
@@ -44,16 +44,16 @@
             <div id="res-box"></div>
         </div>
         <div class="history">
-            <div class="hist-item"><span class="hist-ver">V38.4</span> 하이브리드 엔진 탐색 시스템(3단계) 및 자동 복구 모드</div>
-            <div class="hist-item"><span class="hist-ver">V38.3</span> v1beta 경로 복원 및 모델 타겟팅 시도</div>
+            <div class="hist-item"><span class="hist-ver">V38.6</span> Gemini 3 Flash Preview 모델 지원 및 호출 헤더 최적화</div>
+            <div class="hist-item"><span class="hist-ver">V38.5</span> 무한 경로 탐색(v1/v1beta) 및 안전 필터 최적화</div>
+            <div class="hist-item"><span class="hist-ver">V38.4</span> 하이브리드 엔진 탐색 시스템(Flash/Pro)</div>
+            <div class="hist-item"><span class="hist-ver">V38.3</span> v1beta 경로 복원 및 모델 타겟팅</div>
             <div class="hist-item"><span class="hist-ver">V38.2</span> 구글 API 정식 경로(v1) 전환 시도</div>
             <div class="hist-item"><span class="hist-ver">V38.1</span> 엔진 호출 규격화 및 오류 세분화</div>
-            <div class="hist-item"><span class="hist-ver">V38.0</span> 보안 강화(API 키 비노출) 및 커플 이미지 복원</div>
+            <div class="hist-item"><span class="hist-ver">V38.0</span> 보안 강화 및 커플 이미지 완벽 복원</div>
             <div class="hist-item"><span class="hist-ver">V37.0</span> Claude API 엔진 교체 시도</div>
-            <div class="hist-item"><span class="hist-ver">V36.0</span> 클로드 UI 구조 + 제미나이 엔진 하이브리드</div>
-            <div class="hist-item"><span class="hist-ver">V35.0</span> 엔진 경로 정규화 및 분석 반영</div>
-            <div class="hist-item"><span class="hist-ver">V34.0</span> CSS 은하수 엔진 도입</div>
-            <div class="hist-item"><span class="hist-ver">V33.0</span> 배경 이미지 유실 방지 대책 적용</div>
+            <div class="hist-item"><span class="hist-ver">V36.0</span> 클로드 UI + 제미나이 하이브리드</div>
+            <div class="hist-item"><span class="hist-ver">V35.0</span> 엔진 경로 정규화 분석</div>
         </div>
     </div>
 <script>
@@ -69,13 +69,17 @@
     const savedKey = localStorage.getItem('nana_key');
     if(savedKey) document.getElementById('apiKey').value = savedKey;
 
-    async function callGemini(key, text, modelName) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+    async function callGemini(key, text, model, version) {
+        // ✅ 포비님이 가져오신 예제 방식(Header 사용)을 적극 수용합니다.
+        const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent`;
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-goog-api-key': key  // 헤더 방식 점화
+            },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: `번역 전문가로서 다음 중문을 한국어 한자음 독음을 살려 유려하게 번역하라:\n\n${text}` }] }]
+                contents: [{ parts: [{ text: `소설 번역가로서 다음 중문을 자연스러운 한국어 구어체로 번역하라. 한자음은 한국 한자음으로 표기할 것:\n\n${text}` }] }]
             })
         });
         return response;
@@ -90,31 +94,26 @@
         localStorage.setItem('nana_key', key);
         resBox.style.display = "block";
         
-        // 🕵️‍♂️ 범인 추적 모델 리스트
-        const models = ['gemini-1.5-flash', 'gemini-1.5-flash-001', 'gemini-pro'];
-        let success = false;
+        // 🕵️‍♂️ 포비님의 증거를 토대로 gemini-3 추가
+        const models = ['gemini-3-flash-preview', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+        const versions = ['v1beta', 'v1'];
+        
+        for (let v of versions) {
+            for (let m of models) {
+                resBox.innerText = `🚀 [V38.6] 제미나이 3세대 타격 중: ${m} (${v})...`;
+                try {
+                    const response = await callGemini(key, text, m, v);
+                    const data = await response.json();
 
-        for (let model of models) {
-            resBox.innerText = `🚀 [V38.4] 엔진 탐색 중: ${model}...`;
-            try {
-                const response = await callGemini(key, text, model);
-                const data = await response.json();
-
-                if (response.ok) {
-                    resBox.innerText = data.candidates[0].content.parts[0].text;
-                    success = true;
-                    break; // 성공하면 중단
-                } else {
-                    console.warn(`${model} 점화 실패: ${data.error ? data.error.message : 'Unknown'}`);
-                }
-            } catch (e) {
-                console.error(`${model} 네트워크 오류`);
+                    if (response.ok) {
+                        resBox.innerText = data.candidates[0].content.parts[0].text;
+                        return;
+                    }
+                } catch (e) { console.error("점화 오류"); }
             }
         }
 
-        if (!success) {
-            resBox.innerText = "❌ 모든 모델(Flash, Pro) 점화 실패.\n사유: API 키의 권한 문제이거나 지역 제한일 수 있습니다.\n\n💡 Google AI Studio에서 'Pay-as-you-go'가 아닌 'Free' 플랜인지 확인해 보세요.";
-        }
+        resBox.innerText = "❌ 최신 엔진(Gemini 3)을 포함한 모든 시도가 거부되었습니다.\n포비님, 혹시 API 키의 'IP 제한'이나 '서비스 제한'이 걸려있는지 확인이 필요해 보입니다!";
     }
 </script>
 </body>
