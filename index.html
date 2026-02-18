@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NANA LAB V42.8</title>
+<title>NANA LAB V42.9</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
@@ -14,34 +14,38 @@
   .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 5vh 20px 50px; text-align: center; min-height: 100vh; }
-  .couple-main { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 15px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 20px rgba(0,255,204,0.3); }
-  h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; }
+  /* 📍 전체 컨테이너 여백 상향 조정 (아이콘 하강) */
+  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 12vh 20px 50px; text-align: center; min-height: 100vh; }
+  
+  /* 📍 커플 이미지 상단 마진 추가 */
+  .couple-main { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 25px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 20px rgba(0,255,204,0.3); }
+  h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 40px; }
 
   /* 메인 로비 */
-  .dashboard { display: flex; justify-content: center; gap: 20px; margin-top: 50px; }
+  .dashboard { display: flex; justify-content: center; gap: 20px; margin-top: 60px; }
   .app-icon { width: 100px; cursor: pointer; transition: 0.3s; }
   .icon-circle { width: 70px; height: 70px; border-radius: 20px; border: 1px solid var(--border); background: rgba(0,255,204,0.05); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 10px; box-shadow: 0 0 15px rgba(0,255,204,0.1); }
   .app-name { font-size: 11px; color: #aaa; font-weight: 500; }
 
-  /* 번역기 모듈 */
+  /* 번역기 상세 */
   #translator-page { display: none; text-align: left; animation: fadeIn 0.3s ease; }
-  .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
-  .nav-btn { font-size: 24px; cursor: pointer; }
-  
-  .tab-container { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 0 10px; }
+  .nav-btn { font-size: 24px; cursor: pointer; transition: 0.2s; }
+  .nav-btn:hover { color: var(--neon); }
+
+  .tab-container { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
   .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 14px; color: #666; }
   .tab.active { color: var(--neon); border-bottom: 2px solid var(--neon); font-weight: bold; }
 
-  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 15px; padding: 20px; backdrop-filter: blur(15px); }
-  input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 12px; font-size: 14px; outline: none; margin-bottom: 15px; }
+  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 15px; padding: 25px; backdrop-filter: blur(15px); }
+  input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 14px; font-size: 14px; outline: none; margin-bottom: 15px; }
   .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
 
-  #res-box { margin-top: 20px; background: rgba(0,10,25,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 25px; font-family: 'Noto Serif KR', serif; line-height: 1.9; font-size: 17px; white-space: pre-wrap; display: none; }
+  #res-box { margin-top: 25px; background: rgba(0,10,25,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 25px; font-family: 'Noto Serif KR', serif; line-height: 1.9; font-size: 17px; white-space: pre-wrap; display: none; }
 
-  /* 클릭형 히스토리 스타일 */
-  .history-wrapper { margin-top: 80px; border-top: 1px solid rgba(0,255,204,0.1); padding-top: 15px; }
-  .history-toggle { display: inline-block; cursor: pointer; color: var(--neon); font-size: 10px; opacity: 0.5; letter-spacing: 2px; font-weight: bold; padding: 5px 15px; border: 1px solid var(--border); border-radius: 20px; transition: 0.3s; }
+  /* 토글 히스토리 */
+  .history-wrapper { margin-top: 100px; border-top: 1px solid rgba(0,255,204,0.1); padding-top: 20px; }
+  .history-toggle { display: inline-block; cursor: pointer; color: var(--neon); font-size: 10px; opacity: 0.5; letter-spacing: 2px; font-weight: bold; padding: 6px 18px; border: 1px solid var(--border); border-radius: 20px; transition: 0.3s; }
   .history-toggle:hover { opacity: 1; background: rgba(0,255,204,0.1); }
   
   #history-content { display: none; margin-top: 20px; text-align: left; opacity: 0.6; font-size: 10px; animation: fadeIn 0.4s ease; }
@@ -55,7 +59,7 @@
 <div id="galaxy-bg"></div>
 <div class="container">
   <div class="couple-main"></div>
-  <h1 id="title-text">NANA LAB <span>V42.8</span></h1>
+  <h1 id="title-text">NANA LAB <span>V42.9</span></h1>
 
   <div id="main-lobby">
     <div class="dashboard">
@@ -63,11 +67,11 @@
         <div class="icon-circle">📖</div>
         <div class="app-name">소설번역기</div>
       </div>
-      <div class="app-icon" onclick="alert('준비 중...')">
+      <div class="app-icon" onclick="alert('영상 기지가 점검 중입니다.')">
         <div class="icon-circle">🎞️</div>
         <div class="app-name">동영상 다운로더</div>
       </div>
-      <div class="app-icon" onclick="alert('미지정...')">
+      <div class="app-icon" onclick="alert('미지정 구역입니다.')">
         <div class="icon-circle">➕</div>
         <div class="app-name">미지정</div>
       </div>
@@ -85,11 +89,11 @@
     </div>
     <div class="card">
       <div id="input-url">
-        <label style="font-size:10px; color:var(--neon);">BYPASS URL</label>
-        <input type="text" id="urlInput" placeholder="페이지 주소를 입력하세요...">
+        <label style="font-size:10px; color:var(--neon);">BYPASS LINK</label>
+        <input type="text" id="urlInput" placeholder="주소를 입력하세요...">
       </div>
       <div id="input-copy" style="display:none;">
-        <label style="font-size:10px; color:var(--neon);">SOURCE TEXT</label>
+        <label style="font-size:10px; color:var(--neon);">RAW SOURCE</label>
         <textarea id="textInput" style="height:250px;" placeholder="원문을 붙여넣으세요..."></textarea>
       </div>
       <input type="password" id="apiKey" placeholder="API KEY">
@@ -101,6 +105,7 @@
   <div class="history-wrapper">
     <div class="history-toggle" onclick="toggleHistory()">VIEW VERSION HISTORY</div>
     <div id="history-content">
+      <div class="hist-item"><span class="hist-ver">V42.9</span> 전체 레이아웃 수직 위치 조정 (아이콘 하강 패치)</div>
       <div class="hist-item"><span class="hist-ver">V42.8</span> 히스토리 토글(아코디언) 기능 추가 및 UI 최적화</div>
       <div class="hist-item"><span class="hist-ver">V42.7</span> 클로드 방식 8중 우회 크롤링 및 고스트 헤더 시스템 탑재</div>
       <div class="hist-item"><span class="hist-ver">V42.6</span> 페이지 링크/원문 듀얼 탭 명칭 및 구조 최종 복구</div>
@@ -110,7 +115,6 @@
       <div class="hist-item"><span class="hist-ver">V42.2</span> 홈 아이콘 및 휴지통 아이콘 네비게이션 복구</div>
       <div class="hist-item"><span class="hist-ver">V42.1</span> 레이아웃 통합 및 CSS 클린 패치 적용</div>
       <div class="hist-item"><span class="hist-ver">V41.9</span> gemini-1.5-flash 모델 최적화 및 5초 간격 유지</div>
-      <div class="hist-item"><span class="hist-ver">V41.8</span> 결제 계정 동기화 대응 및 에러 핸들링 보강</div>
     </div>
   </div>
 </div>
@@ -134,7 +138,7 @@
   function goHome() {
     document.getElementById('main-lobby').style.display = 'flex';
     document.getElementById('translator-page').style.display = 'none';
-    document.getElementById('title-text').innerHTML = "NANA LAB <span>V42.8</span>";
+    document.getElementById('title-text').innerHTML = "NANA LAB <span>V42.9</span>";
   }
 
   function switchTab(type) {
@@ -161,12 +165,12 @@
     const btn = document.getElementById('fireBtn');
     const resBox = document.getElementById('res-box');
 
-    if(!key || !content) return alert("내용을 입력하세요!");
+    if(!key || !content) return alert("필수 값을 입력하세요!");
     localStorage.setItem('nana_gemini_key', key);
     
     btn.disabled = true;
     resBox.style.display = 'block';
-    resBox.innerText = isUrlMode ? "🕵️‍♂️ 8중 우회 가동... 페이지 뚫는 중" : "🚀 번역 진행 중...";
+    resBox.innerText = isUrlMode ? "🕵️‍♂️ 8-BYPASS 보호막 가동 중..." : "🚀 분석 번역 중...";
 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
@@ -175,24 +179,23 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `너는 소설 전문 번역가야. 중국 발음 금지, 한국 한자음 사용, 자연스러운 구어체로 번역:\n\n${content}` }] }]
+          contents: [{ parts: [{ text: `소설 전문 번역가 모드. 중국 발음 금지, 한국 한자음, 구어체로 번역:\n\n${content}` }] }]
         })
       });
       const data = await response.json();
-      resBox.innerText = data.candidates ? data.candidates[0].content.parts[0].text : "에러: " + data.error.message;
+      resBox.innerText = data.candidates ? data.candidates[0].content.parts[0].text : "Error: " + data.error.message;
     } catch(e) {
-      resBox.innerText = "통신 오류 발생.";
+      resBox.innerText = "통신 실패.";
     } finally {
       let timer = 5;
       const interval = setInterval(() => {
-        btn.innerText = `NEXT LOAD (${timer}s)`;
+        btn.innerText = `RECHARGE (${timer}s)`;
         timer--;
         if (timer < 0) { clearInterval(interval); btn.disabled = false; btn.innerText = "FIRE ENGINE"; }
       }, 1000);
     }
   }
 
-  // 별 배경
   const bg = document.getElementById('galaxy-bg');
   for(let i=0; i<150; i++){
     const s = document.createElement('div'); s.className = 'star';
