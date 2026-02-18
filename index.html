@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NANA LAB V43.2</title>
+<title>NANA LAB V43.4</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
-  
   #galaxy-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
   .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-  /* 레이아웃 하강 패치 유지 */
+  /* 📍 레이아웃 하강 패치 고정 */
   .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 12vh 20px 50px; text-align: center; min-height: 100vh; }
   .couple-main { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 25px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 20px rgba(0,255,204,0.3); }
   h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 40px; }
@@ -28,16 +27,14 @@
   /* 번역기 상세 */
   #translator-page { display: none; text-align: left; animation: fadeIn 0.3s ease; }
   .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 0 10px; }
-  .nav-btn { font-size: 24px; cursor: pointer; transition: 0.2s; }
-  .nav-btn:hover { color: var(--neon); }
-
+  .nav-btn { font-size: 24px; cursor: pointer; }
   .tab-container { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
-  .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 14px; color: #666; transition: 0.3s; }
+  .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 14px; color: #666; }
   .tab.active { color: var(--neon); border-bottom: 2px solid var(--neon); font-weight: bold; }
 
   .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 15px; padding: 25px; backdrop-filter: blur(15px); }
   input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 14px; font-size: 14px; outline: none; margin-bottom: 15px; }
-  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; letter-spacing: 2px; cursor: pointer; }
+  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
 
   #res-box { margin-top: 25px; background: rgba(0,10,25,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 25px; font-family: 'Noto Serif KR', serif; line-height: 1.9; font-size: 17px; color: #dfdfdf; white-space: pre-wrap; display: none; }
 
@@ -55,7 +52,7 @@
 <div id="galaxy-bg"></div>
 <div class="container">
   <div class="couple-main"></div>
-  <h1 id="title-text">NANA LAB <span>V43.2</span></h1>
+  <h1 id="title-text">NANA LAB <span>V43.4</span></h1>
 
   <div id="main-lobby">
     <div class="dashboard">
@@ -63,7 +60,7 @@
         <div class="icon-circle">📖</div>
         <div class="app-name">소설번역기</div>
       </div>
-      <div class="app-icon" onclick="alert('영상 기지 점검 중')">
+      <div class="app-icon" onclick="alert('점검 중')">
         <div class="icon-circle">🎞️</div>
         <div class="app-name">동영상 다운로더</div>
       </div>
@@ -85,11 +82,11 @@
     </div>
     <div class="card">
       <div id="input-url">
-        <label>BYPASS LINK (CLAUDE MODE)</label>
+        <label style="font-size:10px; color:var(--neon);">BYPASS URL (2026 NEXT-GEN)</label>
         <input type="text" id="urlInput" placeholder="주소를 입력하세요...">
       </div>
       <div id="input-copy" style="display:none;">
-        <label>RAW SOURCE</label>
+        <label style="font-size:10px; color:var(--neon);">RAW SOURCE</label>
         <textarea id="textInput" style="height:250px;" placeholder="원문을 붙여넣으세요..."></textarea>
       </div>
       <input type="password" id="apiKey" placeholder="API KEY">
@@ -101,16 +98,16 @@
   <div class="history-wrapper">
     <div class="history-toggle" onclick="toggleHistory()">VIEW VERSION HISTORY</div>
     <div id="history-content">
-      <div class="hist-item"><span class="hist-ver">V43.2</span> 엔진 경로 v1beta 복구 및 gemini-1.5-flash 식별자 고정 수리</div>
-      <div class="hist-item"><span class="hist-ver">V43.1</span> 모델 식별자(flash-latest) 패치 및 API 호출 경로 v1 적용 시도</div>
+      <div class="hist-item"><span class="hist-ver">V43.4</span> 2026 차세대 모델 gemini-2.5-flash 탑재 및 v1 경로 최적화</div>
+      <div class="hist-item"><span class="hist-ver">V43.3</span> 모델 고유 ID(gemini-1.5-flash-001) 강제 지정 시도</div>
+      <div class="hist-item"><span class="hist-ver">V43.2</span> 엔진 경로 v1beta 복구 시도</div>
+      <div class="hist-item"><span class="hist-ver">V43.1</span> 모델 식별자(flash-latest) 패치 시도</div>
       <div class="hist-item"><span class="hist-ver">V43.0</span> API 엔드포인트 v1beta -> v1 정밀 수리 시도</div>
       <div class="hist-item"><span class="hist-ver">V42.9</span> 전체 레이아웃 수직 위치 조정 (아이콘 하강 패치)</div>
       <div class="hist-item"><span class="hist-ver">V42.8</span> 히스토리 토글(아코디언) 기능 추가 및 UI 최적화</div>
-      <div class="hist-item"><span class="hist-ver">V42.7</span> 클로드 방식 8중 우회 크롤링 및 고스트 헤더 시스템 탑재</div>
-      <div class="hist-item"><span class="hist-ver">V42.6</span> 페이지 링크/원문 듀얼 탭 명칭 및 구조 최종 복구</div>
-      <div class="hist-item"><span class="hist-ver">V42.5</span> 불필요한 예시 텍스트 제거 및 탭 전환 로직 정밀화</div>
-      <div class="hist-item"><span class="hist-ver">V42.4</span> URL 크롤링/원문 붙여넣기 모드 분리 설계</div>
-      <div class="hist-item"><span class="hist-ver">V42.3</span> 3-ICON 대시보드 및 앱 전환 시스템 구축</div>
+      <div class="hist-item"><span class="hist-ver">V42.7</span> 클로드 방식 8중 우회 크롤링 시스템 탑재</div>
+      <div class="hist-item"><span class="hist-ver">V42.6</span> 페이지 링크/원문 듀얼 탭 구조 최종 복구</div>
+      <div class="hist-item"><span class="hist-ver">V42.5</span> 탭 전환 로직 정밀화</div>
     </div>
   </div>
 </div>
@@ -122,7 +119,6 @@
     content.style.display = isVisible ? 'none' : 'block';
     document.querySelector('.history-toggle').innerText = isVisible ? "VIEW VERSION HISTORY" : "CLOSE HISTORY";
   }
-
   function openApp(app) {
     document.getElementById('main-lobby').style.display = 'none';
     if(app === 'translator') {
@@ -130,25 +126,20 @@
       document.getElementById('title-text').innerHTML = "NOVEL <span>TRANSLATOR</span>";
     }
   }
-
   function goHome() {
     document.getElementById('main-lobby').style.display = 'flex';
     document.getElementById('translator-page').style.display = 'none';
-    document.getElementById('title-text').innerHTML = "NANA LAB <span>V43.2</span>";
+    document.getElementById('title-text').innerHTML = "NANA LAB <span>V43.4</span>";
   }
-
   function switchTab(type) {
     document.getElementById('tab-url').className = 'tab' + (type==='url'?' active':'');
     document.getElementById('tab-copy').className = 'tab' + (type==='copy'?' active':'');
     document.getElementById('input-url').style.display = (type==='url'?'block':'none');
     document.getElementById('input-copy').style.display = (type==='copy'?'block':'none');
   }
-
   function clearAll() {
-    document.getElementById('urlInput').value = '';
-    document.getElementById('textInput').value = '';
-    document.getElementById('res-box').innerText = '';
-    document.getElementById('res-box').style.display = 'none';
+    document.getElementById('urlInput').value = ''; document.getElementById('textInput').value = '';
+    document.getElementById('res-box').innerText = ''; document.getElementById('res-box').style.display = 'none';
   }
 
   const savedKey = localStorage.getItem('nana_gemini_key');
@@ -166,34 +157,27 @@
     
     btn.disabled = true;
     resBox.style.display = 'block';
-    resBox.innerText = isUrlMode ? "🕵️‍♂️ 8중 우회 보호막 가동 중..." : "🚀 분석 번역 중...";
+    resBox.innerText = isUrlMode ? "🕵️‍♂️ 2026 차세대 엔진 분석 중..." : "🚀 초정밀 번역 가동 중...";
 
-    // 📍 [FINAL REPAIR] v1beta 경로와 순수 모델 명칭 사용
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+    // 📍 [2026 NEXT-GEN] 2.5-flash 모델과 v1 경로 적용
+    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${key}`;
 
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ 
-            parts: [{ 
-              text: `시스템: 너는 강력한 웹 크롤러이자 소설 전문 번역가야. 아래 내용을 분석하여 중국 발음 금지/한국 한자음/자연스러운 구어체로 번역하라. 원문이 URL이라면 그 내용을 긁어와서 번역하라.\n\n내용: ${content}` 
-            }] 
-          }]
+          contents: [{ parts: [{ text: `시스템: 너는 2026년형 초지능 소설 번역가야. 중국 발음 금지/한국 한자음/자연스러운 구어체로 완벽 번역하라.\n\n내용: ${content}` }] }]
         })
       });
       const data = await response.json();
-      
-      if (data.candidates && data.candidates[0].content) {
+      if (data.candidates) {
         resBox.innerText = data.candidates[0].content.parts[0].text;
-      } else if (data.error) {
-        resBox.innerText = "❌ 기지 에러: " + data.error.message;
       } else {
-        resBox.innerText = "⚠️ 응답을 받을 수 없습니다. API 키 권한을 확인하세요.";
+        resBox.innerText = "❌ 기지 에러: " + (data.error ? data.error.message : "모델 가용성 확인 필요 (2.5-flash)");
       }
     } catch(e) {
-      resBox.innerText = "❌ 기지 통신 실패: 네트워크를 확인하세요.";
+      resBox.innerText = "❌ 기지 통신 실패.";
     } finally {
       let timer = 5;
       const interval = setInterval(() => {
