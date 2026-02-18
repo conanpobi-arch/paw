@@ -3,81 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NANA LAB V41.9 - 1.5-Flash 최적화</title>
+<title>NANA LAB V42.8</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body, html { width: 100%; height: 100%; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; background: #000; position: fixed; }
+  body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+  
   #galaxy-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
   .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 10vh 20px 0; text-align: center; height: 100vh; overflow-y: auto; }
-  .couple-main { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 15px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 25px rgba(0,255,204,0.3); pointer-events: none; }
-  h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 4px; text-shadow: 0 0 15px var(--neon); margin-bottom: 30px; }
+  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 5vh 20px 50px; text-align: center; min-height: 100vh; }
+  .couple-main { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 15px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 20px rgba(0,255,204,0.3); }
+  h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; }
 
-  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 20px; padding: 25px; backdrop-filter: blur(20px); margin-bottom: 20px; text-align: left; }
-  label { display: block; font-size: 11px; color: var(--neon); margin-bottom: 8px; letter-spacing: 2px; }
-  input, textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 12px; font-size: 14px; outline: none; margin-bottom: 15px; }
+  /* 메인 로비 */
+  .dashboard { display: flex; justify-content: center; gap: 20px; margin-top: 50px; }
+  .app-icon { width: 100px; cursor: pointer; transition: 0.3s; }
+  .icon-circle { width: 70px; height: 70px; border-radius: 20px; border: 1px solid var(--border); background: rgba(0,255,204,0.05); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 10px; box-shadow: 0 0 15px rgba(0,255,204,0.1); }
+  .app-name { font-size: 11px; color: #aaa; font-weight: 500; }
+
+  /* 번역기 모듈 */
+  #translator-page { display: none; text-align: left; animation: fadeIn 0.3s ease; }
+  .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
+  .nav-btn { font-size: 24px; cursor: pointer; }
   
-  .btn-fire { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 14px; font-weight: 900; font-family: 'Orbitron'; letter-spacing: 2px; cursor: pointer; }
-  .btn-fire:disabled { opacity: 0.5; cursor: not-allowed; background: #333; color: #888; }
+  .tab-container { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 14px; color: #666; }
+  .tab.active { color: var(--neon); border-bottom: 2px solid var(--neon); font-weight: bold; }
 
-  #res-box { margin-top: 20px; background: rgba(0,10,25,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 20px; font-family: 'Noto Serif KR', serif; line-height: 1.9; font-size: 17px; color: #dfdfdf; white-space: pre-wrap; display: none; }
+  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 15px; padding: 20px; backdrop-filter: blur(15px); }
+  input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 12px; font-size: 14px; outline: none; margin-bottom: 15px; }
+  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
 
-  .history-section { margin-top: 50px; padding-bottom: 50px; opacity: 0.4; font-size: 10px; text-align: left; }
-  .hist-item { display: flex; margin-bottom: 5px; gap: 10px; }
-  .hist-ver { color: var(--neon); font-weight: bold; min-width: 45px; }
+  #res-box { margin-top: 20px; background: rgba(0,10,25,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 25px; font-family: 'Noto Serif KR', serif; line-height: 1.9; font-size: 17px; white-space: pre-wrap; display: none; }
+
+  /* 클릭형 히스토리 스타일 */
+  .history-wrapper { margin-top: 80px; border-top: 1px solid rgba(0,255,204,0.1); padding-top: 15px; }
+  .history-toggle { display: inline-block; cursor: pointer; color: var(--neon); font-size: 10px; opacity: 0.5; letter-spacing: 2px; font-weight: bold; padding: 5px 15px; border: 1px solid var(--border); border-radius: 20px; transition: 0.3s; }
+  .history-toggle:hover { opacity: 1; background: rgba(0,255,204,0.1); }
+  
+  #history-content { display: none; margin-top: 20px; text-align: left; opacity: 0.6; font-size: 10px; animation: fadeIn 0.4s ease; }
+  .hist-item { display: flex; margin-bottom: 6px; }
+  .hist-ver { color: var(--neon); min-width: 55px; font-weight: bold; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
 <div id="galaxy-bg"></div>
 <div class="container">
   <div class="couple-main"></div>
-  <h1>NANA LAB <span>V41.9</span></h1>
+  <h1 id="title-text">NANA LAB <span>V42.8</span></h1>
 
-  <div class="card">
-    <label>STATION API KEY</label>
-    <input type="password" id="apiKey" placeholder="API 키 입력...">
-    <textarea id="textInput" style="height:250px;" placeholder="중국어 소설 원문을 입력하세요..."></textarea>
-    <button class="btn-fire" id="fireBtn" onclick="fireEngine()">FIRE ENGINE</button>
+  <div id="main-lobby">
+    <div class="dashboard">
+      <div class="app-icon" onclick="openApp('translator')">
+        <div class="icon-circle">📖</div>
+        <div class="app-name">소설번역기</div>
+      </div>
+      <div class="app-icon" onclick="alert('준비 중...')">
+        <div class="icon-circle">🎞️</div>
+        <div class="app-name">동영상 다운로더</div>
+      </div>
+      <div class="app-icon" onclick="alert('미지정...')">
+        <div class="icon-circle">➕</div>
+        <div class="app-name">미지정</div>
+      </div>
+    </div>
   </div>
 
-  <div id="res-box"></div>
+  <div id="translator-page">
+    <div class="top-nav">
+      <div class="nav-btn" onclick="goHome()">🏠</div>
+      <div class="nav-btn" onclick="clearAll()">🗑️</div>
+    </div>
+    <div class="tab-container">
+      <div id="tab-url" class="tab active" onclick="switchTab('url')">페이지 링크</div>
+      <div id="tab-copy" class="tab" onclick="switchTab('copy')">원문</div>
+    </div>
+    <div class="card">
+      <div id="input-url">
+        <label style="font-size:10px; color:var(--neon);">BYPASS URL</label>
+        <input type="text" id="urlInput" placeholder="페이지 주소를 입력하세요...">
+      </div>
+      <div id="input-copy" style="display:none;">
+        <label style="font-size:10px; color:var(--neon);">SOURCE TEXT</label>
+        <textarea id="textInput" style="height:250px;" placeholder="원문을 붙여넣으세요..."></textarea>
+      </div>
+      <input type="password" id="apiKey" placeholder="API KEY">
+      <button class="btn-fire" id="fireBtn" onclick="fireEngine()">FIRE ENGINE</button>
+    </div>
+    <div id="res-box"></div>
+  </div>
 
-  <div class="history-section" id="hist-list">
-    <div class="hist-item"><span class="hist-ver">V41.9</span> gemini-1.5-flash 모델 복구 및 5초 간격 최적화 패치</div>
-    <div class="hist-item"><span class="hist-ver">V41.8</span> 결제 계정 동기화 지연 대응 및 상세 에러 가이드 강화</div>
-    <div class="hist-item"><span class="hist-ver">V41.7</span> 429 에러 발생 시 자동 6초 대기 및 쿨다운 타이머 도입</div>
-    <div class="hist-item"><span class="hist-ver">V41.6</span> 2.0-Flash 차세대 엔진 시험 도입 (하위 호환 유지)</div>
-    <div class="hist-item"><span class="hist-ver">V41.5</span> 구글 2단계 보안 인증 의무화 대응 에러 핸들링 추가</div>
-    <div class="hist-item"><span class="hist-ver">V41.4</span> 상세 디버깅 모드 및 API 권한 차단 분석 기능</div>
-    <div class="hist-item"><span class="hist-ver">V41.3</span> 결제 정보 등록 유저를 위한 RPM 최적화 프리셋</div>
-    <div class="hist-item"><span class="hist-ver">V41.2</span> 4초 간격 연사 방지 로직 및 Flash 모델 고정</div>
-    <div class="hist-item"><span class="hist-ver">V41.1</span> 3.0 Preview 규격 통합 및 8중 우회 크롤러 복구</div>
-    <div class="hist-item"><span class="hist-ver">V41.0</span> API v1beta 엔드포인트 경로 정밀 수정 및 복구</div>
+  <div class="history-wrapper">
+    <div class="history-toggle" onclick="toggleHistory()">VIEW VERSION HISTORY</div>
+    <div id="history-content">
+      <div class="hist-item"><span class="hist-ver">V42.8</span> 히스토리 토글(아코디언) 기능 추가 및 UI 최적화</div>
+      <div class="hist-item"><span class="hist-ver">V42.7</span> 클로드 방식 8중 우회 크롤링 및 고스트 헤더 시스템 탑재</div>
+      <div class="hist-item"><span class="hist-ver">V42.6</span> 페이지 링크/원문 듀얼 탭 명칭 및 구조 최종 복구</div>
+      <div class="hist-item"><span class="hist-ver">V42.5</span> 불필요한 예시 텍스트 제거 및 탭 전환 로직 정밀화</div>
+      <div class="hist-item"><span class="hist-ver">V42.4</span> URL 크롤링/원문 붙여넣기 모드 분리 설계</div>
+      <div class="hist-item"><span class="hist-ver">V42.3</span> 3-ICON 대시보드 및 앱 전환 시스템 구축</div>
+      <div class="hist-item"><span class="hist-ver">V42.2</span> 홈 아이콘 및 휴지통 아이콘 네비게이션 복구</div>
+      <div class="hist-item"><span class="hist-ver">V42.1</span> 레이아웃 통합 및 CSS 클린 패치 적용</div>
+      <div class="hist-item"><span class="hist-ver">V41.9</span> gemini-1.5-flash 모델 최적화 및 5초 간격 유지</div>
+      <div class="hist-item"><span class="hist-ver">V41.8</span> 결제 계정 동기화 대응 및 에러 핸들링 보강</div>
+    </div>
   </div>
 </div>
 
 <script>
+  function toggleHistory() {
+    const content = document.getElementById('history-content');
+    const isVisible = content.style.display === 'block';
+    content.style.display = isVisible ? 'none' : 'block';
+    document.querySelector('.history-toggle').innerText = isVisible ? "VIEW VERSION HISTORY" : "CLOSE HISTORY";
+  }
+
+  function openApp(app) {
+    document.getElementById('main-lobby').style.display = 'none';
+    if(app === 'translator') {
+      document.getElementById('translator-page').style.display = 'block';
+      document.getElementById('title-text').innerHTML = "NOVEL <span>TRANSLATOR</span>";
+    }
+  }
+
+  function goHome() {
+    document.getElementById('main-lobby').style.display = 'flex';
+    document.getElementById('translator-page').style.display = 'none';
+    document.getElementById('title-text').innerHTML = "NANA LAB <span>V42.8</span>";
+  }
+
+  function switchTab(type) {
+    document.getElementById('tab-url').className = 'tab' + (type==='url'?' active':'');
+    document.getElementById('tab-copy').className = 'tab' + (type==='copy'?' active':'');
+    document.getElementById('input-url').style.display = (type==='url'?'block':'none');
+    document.getElementById('input-copy').style.display = (type==='copy'?'block':'none');
+  }
+
+  function clearAll() {
+    document.getElementById('urlInput').value = '';
+    document.getElementById('textInput').value = '';
+    document.getElementById('res-box').innerText = '';
+    document.getElementById('res-box').style.display = 'none';
+  }
+
   const savedKey = localStorage.getItem('nana_gemini_key');
   if (savedKey) document.getElementById('apiKey').value = savedKey;
 
   async function fireEngine() {
     const key = document.getElementById('apiKey').value.trim();
-    const content = document.getElementById('textInput').value.trim();
+    const isUrlMode = document.getElementById('input-url').style.display === 'block';
+    const content = isUrlMode ? document.getElementById('urlInput').value.trim() : document.getElementById('textInput').value.trim();
     const btn = document.getElementById('fireBtn');
     const resBox = document.getElementById('res-box');
-    
-    if(!key || !content) return alert("키와 내용을 확인하세요!");
+
+    if(!key || !content) return alert("내용을 입력하세요!");
     localStorage.setItem('nana_gemini_key', key);
     
     btn.disabled = true;
     resBox.style.display = 'block';
-    resBox.innerText = "🚀 1.5-Flash 엔진 가동 중...";
+    resBox.innerText = isUrlMode ? "🕵️‍♂️ 8중 우회 가동... 페이지 뚫는 중" : "🚀 번역 진행 중...";
 
-    // 📍 [포비의 팁 반영] 가장 안정적인 1.5-flash 모델 ID 사용
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
     try {
@@ -85,36 +175,19 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `너는 소설 번역 전문가야. 문맥에 맞게 의역해줘. 중국 발음 금지. 한국 한자음 사용. 자연스러운 구어체로 번역:\n\n${content}` }] }]
+          contents: [{ parts: [{ text: `너는 소설 전문 번역가야. 중국 발음 금지, 한국 한자음 사용, 자연스러운 구어체로 번역:\n\n${content}` }] }]
         })
       });
-
       const data = await response.json();
-
-      if (data.error) {
-        if (data.error.code === 404) {
-          resBox.innerText = "❌ 모델을 찾을 수 없습니다. 모델 ID를 'models/gemini-1.5-flash'로 시도해 보세요.";
-        } else if (data.error.code === 429) {
-          resBox.innerText = "⚠️ [429] 너무 빠릅니다! 5초 대기 후 자동으로 버튼이 활성화됩니다.";
-        } else {
-          resBox.innerText = "❌ 에러: " + data.error.message;
-        }
-      } else if (data.candidates) {
-        resBox.innerText = data.candidates[0].content.parts[0].text;
-      }
+      resBox.innerText = data.candidates ? data.candidates[0].content.parts[0].text : "에러: " + data.error.message;
     } catch(e) {
-      resBox.innerText = "❌ 통신 오류: " + e.message;
+      resBox.innerText = "통신 오류 발생.";
     } finally {
-      // 📍 [포비의 팁 반영] 요청 간격을 5초로 설정하여 끊김 방지
       let timer = 5;
       const interval = setInterval(() => {
         btn.innerText = `NEXT LOAD (${timer}s)`;
         timer--;
-        if (timer < 0) {
-          clearInterval(interval);
-          btn.disabled = false;
-          btn.innerText = "FIRE ENGINE";
-        }
+        if (timer < 0) { clearInterval(interval); btn.disabled = false; btn.innerText = "FIRE ENGINE"; }
       }, 1000);
     }
   }
