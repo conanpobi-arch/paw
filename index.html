@@ -9,18 +9,29 @@
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
-  #galaxy-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); overflow: hidden; }
-  .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
-  @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-  .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 5vh 20px 20px; text-align: center; justify-content: center; }
-  .couple-main { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 15px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
-  h1 { font-family: 'Orbitron', sans-serif; font-size: 18px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin-bottom: 20px; }
-  .dashboard { display: flex; flex-direction: row; justify-content: center; gap: 20px; margin-top: 20px; }
-  .app-icon { width: 80px; cursor: pointer; }
+  #galaxy-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
+  .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 2vh 20px; text-align: center; }
+  
+  /* 커플 이미지 및 타이틀 */
+  .couple-main { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 10px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 15px rgba(0,255,204,0.3); flex-shrink: 0; }
+  h1 { font-family: 'Orbitron', sans-serif; font-size: 16px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin-bottom: 15px; }
+
+  /* 상단 배치된 히스토리 */
+  .history-section { background: rgba(0, 20, 40, 0.6); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 20px; text-align: left; max-height: 180px; overflow-y: auto; backdrop-filter: blur(10px); }
+  .history-section h2 { font-family: 'Orbitron'; font-size: 10px; color: var(--neon); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
+  .history-table { width: 100%; font-size: 9px; border-collapse: collapse; }
+  .history-table td { padding: 4px 2px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .v-tag { color: var(--neon); font-weight: bold; width: 40px; }
+
+  /* 8개 대시보드 그리드 */
+  .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+  .app-icon { cursor: pointer; transition: 0.2s; }
+  .app-icon:active { transform: scale(0.9); }
   .icon-circle { width: 55px; height: 55px; border-radius: 15px; border: 1px solid var(--border); background: rgba(0,255,204,0.05); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 5px; }
   .app-name { font-size: 10px; color: #ccc; }
-  #api-input-box { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); width: 200px; }
-  .master-api { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--neon); text-align: center; outline: none; font-family: 'Orbitron'; font-size: 10px; padding: 5px; }
+
+  #api-box { margin-top: auto; padding-bottom: 30px; }
+  .master-api { width: 200px; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--neon); text-align: center; outline: none; font-family: 'Orbitron'; font-size: 10px; padding: 5px; }
 </style>
 </head>
 <body>
@@ -28,21 +39,46 @@
 <div class="container">
   <div class="couple-main"></div>
   <h1>NANA LAB <span style="color:var(--neon)">V45.5</span></h1>
+
+  <div class="history-section">
+    <h2>VERSION HISTORY (TOP 10)</h2>
+    <table class="history-table" id="history-list"></table>
+  </div>
+
   <div class="dashboard">
     <div class="app-icon" onclick="location.href='novel.html'"><div class="icon-circle">📖</div><div class="app-name">소설번역기</div></div>
-    <div class="app-icon" onclick="alert('점검 중')"><div class="icon-circle">🎞️</div><div class="app-name">영상기지</div></div>
-    <div class="app-icon" onclick="alert('준비 중')"><div class="icon-circle">➕</div><div class="app-name">미지정</div></div>
+    <div class="app-icon" onclick="alert('동영상다운로더 준비중')"><div class="icon-circle">📥</div><div class="app-name">영상받기</div></div>
+    <div class="app-icon" onclick="alert('할일 준비중')"><div class="icon-circle">✅</div><div class="app-name">할일</div></div>
+    <div class="app-icon" onclick="alert('가계부 준비중')"><div class="icon-circle">💰</div><div class="app-name">가계부</div></div>
+    <div class="app-icon" onclick="alert('뉴스섬머리 준비중')"><div class="icon-circle">📰</div><div class="app-name">뉴스요약</div></div>
+    <div class="app-icon" onclick="alert('사고정리 준비중')"><div class="icon-circle">🧠</div><div class="app-name">사고정리</div></div>
+    <div class="app-icon" onclick="alert('영화보기 준비중')"><div class="icon-circle">🎬</div><div class="app-name">영화보기</div></div>
+    <div class="app-icon" onclick="alert('스포츠감상 준비중')"><div class="icon-circle">⚽</div><div class="app-name">스포츠</div></div>
   </div>
-  <div id="api-input-box">
+
+  <div id="api-box">
     <input type="password" id="masterKey" class="master-api" placeholder="GEMINI API KEY">
   </div>
 </div>
+<audio id="bgm" src="./bgm.mp3" loop></audio>
 <script>
-  for(let i=0; i<100; i++){
-    const s = document.createElement('div'); s.className = 'star';
-    Object.assign(s.style, { left:Math.random()*100+'%', top:Math.random()*100+'%', width:'1.5px', height:'1.5px' });
-    s.style.setProperty('--dur', (Math.random()*3+2)+'s'); document.getElementById('galaxy-bg').appendChild(s);
-  }
+  document.body.onclick = () => { document.getElementById('bgm').play(); };
+  const historyData = [
+    {v:"v2.21", d:"2026-02-19", c:"인덱스/노벨 최종 코드 재출력 및 구조 확정"},
+    {v:"v2.20", d:"2026-02-19", c:"8개 앱 중 소설 엔진 완성 확인 및 로드맵 정립"},
+    {v:"v2.19", d:"2026-02-19", c:"8개 아이콘 배치 및 히스토리 상단 이동, BGM 연동"},
+    {v:"v2.18", d:"2026-02-19", c:"NOVEL ENGINE V45.5 프롬프트 최적화"},
+    {v:"v2.17", d:"2026-02-19", c:"V45.5 INDEX 소스 복구 및 동기화"},
+    {v:"v2.16", d:"2026-02-19", c:"45.5 버전 데이터 복구 작업"},
+    {v:"v2.15", d:"2026-02-19", c:"히스토리 점검 및 45.5 확인"},
+    {v:"v2.14", d:"2026-02-19", c:"실제 사이트 제작 프로젝트 복귀"},
+    {v:"v2.13", d:"2026-02-19", c:"아키텍처 재정립"},
+    {v:"v2.12", d:"2026-02-19", c:"코난 테마 추리 서사 업데이트"}
+  ];
+  const hList = document.getElementById('history-list');
+  historyData.forEach(item => {
+    hList.innerHTML += `<tr><td class="v-tag">${item.v}</td><td>${item.d}</td><td>${item.c}</td></tr>`;
+  });
   const keyInput = document.getElementById('masterKey');
   keyInput.value = localStorage.getItem('nana_gemini_key') || '';
   keyInput.oninput = () => localStorage.setItem('nana_gemini_key', keyInput.value);
