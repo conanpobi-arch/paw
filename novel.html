@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA NOVEL ENGINE V45.8.6</title>
+<title>NANA NOVEL ENGINE V45.8.7</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
+  
+  /* 정적인 우주 배경 (텍스트 집중용) */
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #0d1d31 0%, #0c0d13 100%); opacity: 0.8; }
   #star-field { position: fixed; inset: 0; z-index: 1; background-image: radial-gradient(white, rgba(255,255,255,0.2) 2px, transparent 40px); background-size: 150px 150px; opacity: 0.1; }
 
@@ -18,18 +20,19 @@
 
   .card { background: rgba(0,15,35,0.75); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
   textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; outline: none; margin-bottom: 15px; height: 250px; resize: none; transition: all 0.4s ease; line-height: 1.6; }
+  textarea.shrink { height: 80px; font-size: 11px; opacity: 0.5; }
   
   .master-api { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; }
   .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(0,255,204,0.3); }
 
-  /* 결과창 */
+  /* 결과창 설정 (가독성 최적화) */
   #res-box { display: none; position: fixed; inset: 0; background: #050a14; z-index: 5000; overflow-y: auto; padding: 80px 35px 140px; font-family: 'Noto Serif KR', serif; line-height: 2.6; font-size: 20px; color: #e0e0e0; white-space: pre-wrap; text-align: justify; word-break: break-all; }
   #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 10, 25, 0.98); border-top: 1px solid var(--border); backdrop-filter: blur(25px); padding: 25px; align-items: center; gap: 15px; }
   .copy-icon-btn { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; }
   .back-main-btn { flex: 1; height: 60px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-  /* 로딩 시스템 */
-  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+  /* 로딩 오버레이 */
+  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
   .main-loader { width: 50px; height: 50px; border: 4px solid rgba(0,255,204,0.1); border-top: 4px solid var(--neon); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 20px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   #strategy-log { color: #fff; font-size: 11px; width: 320px; text-align: left; background: rgba(0,20,40,0.8); padding: 15px; border-radius: 12px; font-family: monospace; border: 1px solid var(--border); max-height: 250px; overflow-y: auto; }
@@ -42,19 +45,19 @@
   <div class="main-loader"></div>
   <div style="color:var(--neon); font-family:'Orbitron'; font-size:12px; margin-bottom:10px; letter-spacing:2px;">ENGINE IGNITION...</div>
   <div id="strategy-log"></div>
-  <button onclick="location.reload()" style="margin-top:20px; background:none; border:1px solid #ff4444; color:#ff4444; padding:5px 15px; border-radius:10px; font-size:10px;">CANCEL</button>
+  <button onclick="location.reload()" style="margin-top:20px; background:none; border:1px solid #ff4444; color:#ff4444; padding:5px 15px; border-radius:10px; font-size:10px; cursor:pointer;">CANCEL</button>
 </div>
 
 <div class="container">
   <div class="nav-header">
     <div onclick="location.href='index.html'" style="cursor:pointer; font-size:26px;">🏠</div>
-    <div class="engine-title">NANA NOVEL V45.8.6</div>
+    <div class="engine-title">NANA NOVEL V45.8.7</div>
     <div onclick="document.getElementById('mainInput').value=''" style="cursor:pointer; font-size:26px;">🗑️</div>
   </div>
   <div class="card">
     <textarea id="mainInput" placeholder="URL 혹은 원문을 입력하세요..."></textarea>
     <div id="api-area"><input type="password" id="apiKey" class="master-api" placeholder="GEMINI API KEY"></div>
-    <button class="btn-fire" id="fireBtn" onclick="fireEngine()">▶ FIRE ENGINE ACTIVE</button>
+    <button class="btn-fire" onclick="fireEngine()">▶ FIRE ENGINE ACTIVE</button>
   </div>
 </div>
 
@@ -65,8 +68,10 @@
 </div>
 
 <script>
-  const savedKey = localStorage.getItem('nana_gemini_key');
-  if(savedKey) document.getElementById('apiKey').value = savedKey;
+  // API 키 관리
+  const keyInput = document.getElementById('apiKey');
+  keyInput.value = localStorage.getItem('nana_gemini_key') || '';
+  keyInput.oninput = () => localStorage.setItem('nana_gemini_key', keyInput.value);
 
   function logStep(msg, type='try') {
     const log = document.getElementById('strategy-log');
@@ -75,9 +80,8 @@
     entry.style.borderLeft = type === 'fail' ? "3px solid #ff4444" : (type === 'success' ? "3px solid #00ff00" : "3px solid var(--neon)");
     entry.style.paddingLeft = "10px";
     entry.style.color = type === 'fail' ? "#ff8888" : (type === 'success' ? "#88ff88" : "#fff");
-    entry.textContent = `[${new Date().toLocaleTimeString('ko-KR', {hour12:false})}] ${msg}`;
+    entry.textContent = `> ${msg}`;
     log.prepend(entry);
-    console.log(msg);
   }
 
   function copyResult() {
@@ -87,62 +91,77 @@
     });
   }
 
+  // 8대 크롤링/우회 전략
   const CRAWL_STRATEGIES = [
-    { name:'CorsProxy', url: (u) => `https://corsproxy.io/?${encodeURIComponent(u)}` },
+    { name:'CorsProxy.io', url: (u) => `https://corsproxy.io/?${encodeURIComponent(u)}` },
     { name:'AllOrigins', url: (u) => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
     { name:'CodeTabs', url: (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
-    { name:'ThingProxy', url: (u) => `https://thingproxy.freeboard.io/fetch/${u}` }
+    { name:'ThingProxy', url: (u) => `https://thingproxy.freeboard.io/fetch/${u}` },
+    { name:'JSONP Raw', url: (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
+    { name:'CloudFlare Mirror', url: (u) => `https://cors-anywhere.herokuapp.com/${u}` } // 임시 대체용
   ];
 
   async function fireEngine() {
-    const key = document.getElementById('apiKey').value.trim();
+    const key = keyInput.value.trim();
     const input = document.getElementById('mainInput').value.trim();
     
-    if(!key) { alert("API KEY가 없습니다."); return; }
-    if(!input) { alert("원문이나 URL을 입력하세요."); return; }
+    if(!key || !input) { alert("API KEY와 입력을 확인하세요."); return; }
 
-    // 🔥 즉시 UI 반응
     document.getElementById('loading-overlay').style.display = 'flex';
     document.getElementById('strategy-log').innerHTML = '';
-    logStep("엔진 점화 시작...");
+    logStep("엔진 예열 중...");
 
     let rawData = input;
 
     try {
       if(input.startsWith('http')) {
-        logStep("URL 감지: 크롤링 모드 전환");
+        logStep("URL 감지: 우회 엔진 가동...");
         let success = false;
-        
         for(let s of CRAWL_STRATEGIES) {
-          logStep(`${s.name} 엔진 시도 중...`);
+          logStep(`${s.name} 시도 중...`);
           try {
-            const res = await fetch(s.url(input), { method: 'GET' });
+            const res = await fetch(s.url(input));
             let text = "";
-            if(s.name === 'AllOrigins') {
-              const json = await res.json();
-              text = json.contents;
-            } else {
-              text = await res.text();
-            }
+            if(s.name === 'AllOrigins') { const json = await res.json(); text = json.contents; }
+            else { text = await res.text(); }
 
             if(text && text.length > 200) {
               const doc = new DOMParser().parseFromString(text, 'text/html');
-              doc.querySelectorAll('script, style, ads, iframe, ins').forEach(e => e.remove());
+              doc.querySelectorAll('script, style, ads, ins, iframe').forEach(e => e.remove());
               rawData = doc.body.innerText || doc.body.textContent;
-              logStep(`${s.name} 데이터 획득 성공!`, 'success');
+              logStep(`${s.name} 데이터 탈취 성공!`, 'success');
               success = true; break;
             }
-          } catch(err) { logStep(`${s.name} 연결 실패`, 'fail'); }
+          } catch(err) { logStep(`${s.name} 차단됨`, 'fail'); }
         }
-        if(!success) throw new Error("모든 우회 엔진이 차단되었습니다.");
+        if(!success) throw new Error("8대 엔진 모두 차단되었습니다.");
       }
 
-      logStep("Gemini AI에 데이터 전송 중...");
+      logStep("Gemini 2.0 Flash 엔진 점화...");
       const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `당신은 무협 소설 번역가입니다. 주인공 성씨 '何'는 무조건 '하'로 번역하세요(예: 하자금). 원문을 한국 소설처럼 유려하게 번역하고 본문만 출력하세요. 원문: ${rawData}` }] }]
+          contents: [{ 
+            parts: [{ 
+              text: `당신은 무협/선협 전문 번역가입니다. 독자가 한국 무협 소설을 읽는 듯한 유려한 문체를 구사하십시오.
+
+[반드시 지켜야 할 지침]
+1. 성씨 '何'는 무조건 '하'로 번역하십시오 (예: 하자금). '남'이나 다른 성씨는 일절 금지합니다.
+2. 매끄러운 한국어 어순과 소설적 의역을 사용하십시오. 한자음만 나열하지 마십시오.
+3. 인물 간의 관계와 말투(경어/반말 등)를 문맥에 따라 일관되게 유지하십시오.
+4. 소설 본문 외의 잡설은 일절 배제하고 결과만 출력하십시오.
+
+원문:
+${rawData}` 
+            }] 
+          }],
+          generationConfig: {
+            temperature: 0.0, // 일관성을 위해 무작위성 제거
+            topP: 0.1,
+            topK: 1,
+            maxOutputTokens: 8192
+          }
         })
       });
 
@@ -150,16 +169,18 @@
       if(data.error) throw new Error(data.error.message);
       
       const translated = data.candidates[0].content.parts[0].text;
-      logStep("번역 완료! UI 생성 중...", 'success');
+      logStep("번역 데이터 수신 완료!", 'success');
 
-      document.getElementById('res-box').innerText = translated;
-      document.getElementById('res-box').style.display = 'block';
+      document.getElementById('mainInput').classList.add('shrink');
+      const rb = document.getElementById('res-box');
+      rb.innerText = translated;
+      rb.style.display = 'block';
       document.getElementById('result-bottom-bar').style.display = 'flex';
       document.getElementById('loading-overlay').style.display = 'none';
 
     } catch(e) {
-      logStep(`[치명적 오류] ${e.message}`, 'fail');
-      alert("엔진 오류: " + e.message);
+      logStep(`오류 발생: ${e.message}`, 'fail');
+      alert("엔진 정지: " + e.message);
     }
   }
 </script>
