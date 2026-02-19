@@ -3,44 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA LAB V2.63</title>
+<title>NANA LAB V2.64</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; cursor: default; }
 
-  /* 우주 배경 및 별빛 */
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); }
   .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
   
-  /* 유성우 캔버스 */
   #meteor-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
-  /* 메인 컨테이너 */
   .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-  
-  /* 커플 이미지 (profile.png 고정) */
   .couple-img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 25px var(--neon); margin-bottom: 20px; object-fit: cover; }
-  
   .main-title { font-family: 'Orbitron'; font-size: 2.2rem; letter-spacing: 8px; color: var(--neon); text-shadow: 0 0 15px var(--neon); margin-bottom: 25px; text-align: center; }
 
-  /* 8대 메뉴 그리드 */
   .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; max-width: 380px; }
-  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 20px 100px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px 10px; }
+  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 20px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; }
   .menu-btn:hover { background: rgba(0, 255, 204, 0.12); box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
   .menu-btn div { font-size: 12px; color: var(--neon); margin-top: 10px; font-weight: bold; }
   .menu-btn span { font-size: 28px; }
 
-  /* 히스토리 모달 */
   #history-modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
   .history-content { width: 100%; max-width: 500px; background: rgba(0,20,40,0.9); border: 1px solid var(--neon); border-radius: 20px; padding: 25px; max-height: 80vh; overflow-y: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 11px; color: #ccc; }
   th, td { padding: 10px 5px; text-align: left; border-bottom: 1px solid rgba(0,255,204,0.1); }
   th { color: var(--neon); font-family: 'Orbitron'; }
-
-  /* 오디오 아이콘 스텔스화 */
   #bgm-status { display: none; }
 </style>
 </head>
@@ -63,10 +53,10 @@
     <a href="#" class="menu-btn"><span>🎬</span><div>영화보기</div></a>
     <a href="#" class="menu-btn"><span>💡</span><div>아이디어체크</div></a>
     <a href="#" class="menu-btn"><span>🙏</span><div>오늘의 기도</div></a>
-    <a href="#" class="menu-btn"><span>⚽</span><div>스포츠토토</div></a>
+    <a href="#" class="menu-btn"><span>📈</span><div>자동매매</div></a>
   </div>
 
-  <div style="margin-top:30px; font-family:'Orbitron'; font-size:10px; color:rgba(0,255,204,0.4); cursor:pointer;" onclick="openModal(event)">SYSTEM VERSION v2.63</div>
+  <div style="margin-top:30px; font-family:'Orbitron'; font-size:10px; color:rgba(0,255,204,0.4); cursor:pointer;" onclick="openModal(event)">SYSTEM VERSION v2.64</div>
 </div>
 
 <div id="history-modal" onclick="closeModal()">
@@ -75,14 +65,14 @@
     <table>
       <thead><tr><th>VER</th><th>DATE</th><th>DESCRIPTION</th></tr></thead>
       <tbody>
-        <tr style="color:#fff;"><td>v2.63</td><td>26-02-19</td><td>볼드 그라데이션 유성우(빛나는 머리) 적용</td></tr>
+        <tr style="color:#fff;"><td>v2.64</td><td>26-02-20</td><td>메뉴 아이콘(📈) 및 자동매매 명칭 확정</td></tr>
+        <tr><td>v2.63</td><td>26-02-19</td><td>뭉툭하고 환한 별똥별 비주얼 강화 (좌우 가로지르기)</td></tr>
         <tr><td>v2.62</td><td>26-02-19</td><td>긴 꼬리 시네마틱 유성우 엔진 교체</td></tr>
         <tr><td>v2.61</td><td>26-02-19</td><td>별똥별 엔진 복구 및 최종 기능 통합</td></tr>
         <tr><td>v2.60</td><td>26-02-19</td><td>모바일용 스피커 아이콘 스텔스화</td></tr>
         <tr><td>v2.59</td><td>26-02-19</td><td>오디오 엔진 강제 언락 시스템 탑재</td></tr>
         <tr><td>v2.56</td><td>26-02-19</td><td>소설 엔진 8대 우회 로직 탑재</td></tr>
         <tr><td>v2.55</td><td>26-02-19</td><td>소설 번역 줄 간격 축소 최적화</td></tr>
-        <tr><td>v2.54</td><td>26-02-19</td><td>인덱스 레이아웃 여백 복구</td></tr>
         <tr><td>v2.42</td><td>26-02-19</td><td>커플 이미지 profile.png 고정</td></tr>
         <tr><td>v2.35</td><td>26-02-19</td><td>API KEY localStorage 저장 로직 적용</td></tr>
       </tbody>
@@ -120,11 +110,11 @@
       this.x = Math.random() * canvas.width * 0.5 - 200; 
       this.y = Math.random() * canvas.height * 0.6;
       this.length = Math.random() * 200 + 200; 
-      this.speed = Math.random() * 1 + 0.5; // 가로지르는 느낌을 위해 천천히
-      this.size = Math.random() * 3 + 2; // 머리 부분 두께
+      this.speed = Math.random() * 1 + 0.5; 
+      this.size = Math.random() * 4 + 3; 
       this.alpha = 0;
       this.maxAlpha = Math.random() * 0.8 + 0.2;
-      this.angle = Math.PI / 6; // 완만한 각도 (좌측에서 우측으로)
+      this.angle = Math.PI / 8; 
     }
     draw() {
       const headX = this.x;
@@ -132,9 +122,8 @@
       const tailX = this.x - Math.cos(this.angle) * this.length;
       const tailY = this.y - Math.sin(this.angle) * this.length;
 
-      // 환한 빛 효과 (머리 부분)
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = 'var(--neon)';
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = 'rgba(0, 255, 204, 0.8)';
       
       const grad = ctx.createLinearGradient(headX, headY, tailX, tailY);
       grad.addColorStop(0, `rgba(0, 255, 204, ${this.alpha})`);
@@ -142,26 +131,24 @@
       grad.addColorStop(1, 'rgba(0, 255, 204, 0)');
 
       ctx.strokeStyle = grad;
-      ctx.lineWidth = this.size; // 더 뭉툭한 머리
+      ctx.lineWidth = this.size;
       ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(headX, headY);
       ctx.lineTo(tailX, tailY);
       ctx.stroke();
-      
-      // 그림자 효과 초기화 (다른 요소 영향 방지)
       ctx.shadowBlur = 0;
     }
     update() {
-      this.x += this.speed * 4; 
-      this.y += this.speed * 0.8; 
+      this.x += this.speed * 4.5; 
+      this.y += this.speed * 0.6; 
       this.alpha += 0.01;
       if (this.x > canvas.width + 300) this.reset();
     }
   }
 
   for (let i = 0; i < 2; i++) {
-    setTimeout(() => meteors.push(new Meteor()), i * 4000);
+    setTimeout(() => meteors.push(new Meteor()), i * 5000);
   }
 
   function animate() {
@@ -177,7 +164,7 @@
     if (isUnlocked) return;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
-    bgm.play().then(() => { isUnlocked = true; });
+    bgm.play().then(() => { isUnlocked = true; }).catch(e => {});
   }
 
   function openModal(e) { 
