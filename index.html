@@ -3,40 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA MAIN SYSTEM V2.43</title>
+<title>NANA MAIN SYSTEM V2.47</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
+  body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; }
 
-  /* 1. 배경 별들 (사라졌던 별들 복구) */
+  /* 배경 레이어 */
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); }
   .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  #meteor-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
-  /* 2. 유성우 캔버스 (빈도 조절) */
-  #meteor-canvas { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
-
-  /* 메인 컨텐츠 */
-  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
   
-  .couple-img { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 20px var(--neon); margin-bottom: 20px; object-fit: cover; z-index: 11; }
-  
-  .main-title { font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 4px; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; text-align: center; }
+  .couple-img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 25px var(--neon); margin-bottom: 20px; object-fit: cover; }
+  .main-title { font-family: 'Orbitron'; font-size: 2.2rem; letter-spacing: 5px; color: var(--neon); text-shadow: 0 0 15px var(--neon); margin-bottom: 25px; }
 
-  /* 3. 8개 아이콘 그리드 복구 */
+  .api-box { width: 100%; max-width: 380px; margin-bottom: 20px; }
+  .master-api { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; text-align: center; font-family: 'Orbitron'; backdrop-filter: blur(10px); }
+
   .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; max-width: 380px; }
-  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 18px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 20px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; }
   .menu-btn:active { transform: scale(0.95); background: rgba(0, 255, 204, 0.2); }
-  .menu-btn div { font-family: 'Orbitron'; font-size: 11px; color: var(--neon); margin-top: 8px; font-weight: bold; letter-spacing: 1px; }
-  .menu-btn span { font-size: 24px; }
+  .menu-btn div { font-size: 12px; color: var(--neon); margin-top: 10px; font-weight: bold; letter-spacing: -0.5px; }
+  .menu-btn span { font-size: 28px; }
 
-  /* BGM 컨트롤 */
-  #bgm-status { position: fixed; bottom: 20px; right: 20px; z-index: 100; width: 50px; height: 50px; background: rgba(0,255,204,0.1); border: 1px solid var(--neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
+  /* 버전 히스토리 버튼 및 모달 */
+  .ver-trigger { margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: rgba(0,255,204,0.4); cursor: pointer; letter-spacing: 2px; }
+  
+  #history-modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
+  .history-content { width: 100%; max-width: 500px; background: rgba(0,20,40,0.9); border: 1px solid var(--neon); border-radius: 20px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+  .history-title { font-family: 'Orbitron'; font-size: 16px; color: var(--neon); margin-bottom: 20px; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 11px; color: #ccc; }
+  th, td { padding: 10px 5px; text-align: left; border-bottom: 1px solid rgba(0,255,204,0.1); }
+  th { color: var(--neon); font-family: 'Orbitron'; }
+  .current-v { color: #fff; font-weight: bold; }
+
+  #bgm-status { position: fixed; bottom: 25px; left: 25px; z-index: 100; font-size: 20px; cursor: pointer; opacity: 0.5; }
 </style>
 </head>
-<body>
+<body onclick="closeModal()">
 
 <div id="galaxy-bg"></div>
 <canvas id="meteor-canvas"></canvas>
@@ -45,79 +54,96 @@
   <source src="bgm.mp3" type="audio/mpeg">
 </audio>
 
-<div id="bgm-status" onclick="toggleBGM()">🔇</div>
+<div id="bgm-status" onclick="toggleBGM(event)">🔇</div>
 
 <div class="main-container">
   <img src="./profile.png" class="couple-img" alt="Couple">
   <h1 class="main-title">NANA SYSTEM</h1>
 
+  <div class="api-box">
+    <input type="password" id="apiKey" class="master-api" placeholder="GEMINI API KEY" onclick="event.stopPropagation()">
+  </div>
+
   <div class="menu-grid">
-    <a href="novel.html" class="menu-btn"><span>📖</span><div>NOVEL</div></a>
-    <a href="#" class="menu-btn" onclick="manualPlay()"><span>🎵</span><div>BGM FIX</div></a>
-    <a href="#" class="menu-btn"><span>📊</span><div>STATS</div></a>
-    <a href="#" class="menu-btn"><span>🌐</span><div>WEB</div></a>
-    <a href="#" class="menu-btn"><span>💬</span><div>CHAT</div></a>
-    <a href="#" class="menu-btn"><span>⚙️</span><div>SETTING</div></a>
-    <a href="#" class="menu-btn"><span>📂</span><div>FILES</div></a>
-    <a href="#" class="menu-btn"><span>🔐</span><div>ADMIN</div></a>
+    <a href="novel.html" class="menu-btn" onclick="event.stopPropagation()"><span>📖</span><div>소설번역기</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>📥</span><div>동영상다운로더</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>✅</span><div>할일</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>📰</span><div>뉴스섬머리</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>🎬</span><div>영화보기</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>💡</span><div>아이디어체크</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>🙏</span><div>오늘의 기도</div></a>
+    <a href="#" class="menu-btn" onclick="event.stopPropagation()"><span>⚽</span><div>스포츠토토</div></a>
+  </div>
+
+  <div class="ver-trigger" onclick="openModal(event)">SYSTEM VERSION v2.47</div>
+</div>
+
+<div id="history-modal">
+  <div class="history-content" onclick="event.stopPropagation()">
+    <div class="history-title">VERSION HISTORY</div>
+    <table>
+      <thead><tr><th>VER</th><th>DATE</th><th>DESCRIPTION</th></tr></thead>
+      <tbody>
+        <tr class="current-v"><td>v2.47</td><td>26-02-19</td><td>히스토리 모달화 및 8대 메뉴 모듈 집중도 향상</td></tr>
+        <tr><td>v2.46</td><td>26-02-19</td><td>포비님 지정 8대 메뉴 최종 명칭 적용</td></tr>
+        <tr><td>v2.45</td><td>26-02-19</td><td>API KEY 필드 배치 및 히스토리 10개 강제 출력</td></tr>
+        <tr><td>v2.44</td><td>26-02-19</td><td>메뉴 명칭 정밀 복구 및 밤하늘 밸런스 조정</td></tr>
+        <tr><td>v2.43</td><td>26-02-19</td><td>별빛 복구 및 유성우 빈도 최적화 패치</td></tr>
+        <tr><td>v2.42</td><td>26-02-19</td><td>커플 이미지 경로 profile.png 고정</td></tr>
+        <tr><td>v2.41</td><td>26-02-19</td><td>캔버스 유성우 엔진 탑재 및 오디오 로직 통합</td></tr>
+        <tr><td>v2.40</td><td>26-02-19</td><td>노벨 엔진 "나나 AI 번역 중" 단계 한글화</td></tr>
+        <tr><td>v2.39</td><td>26-02-19</td><td>실시간 상태 메시지 UI 1.0 적용</td></tr>
+        <tr><td>v2.38</td><td>26-02-19</td><td>폰트 크기 19px 및 가독성 밸런스 조정</td></tr>
+      </tbody>
+    </table>
+    <div style="text-align:center; margin-top:20px; color:var(--neon); font-size:10px;">TAB ANYWHERE TO CLOSE</div>
   </div>
 </div>
 
 <script>
-  // 1. 별들이 사라지지 않게 배경 별 생성
+  // API 키 연동
+  const keyInput = document.getElementById('apiKey');
+  keyInput.value = localStorage.getItem('nana_gemini_key') || '';
+  keyInput.oninput = () => localStorage.setItem('nana_gemini_key', keyInput.value);
+
+  // 모달 제어 로직
+  function openModal(e) { e.stopPropagation(); document.getElementById('history-modal').style.display = 'flex'; }
+  function closeModal() { document.getElementById('history-modal').style.display = 'none'; }
+
+  // 배경 별빛 생성
   const bg = document.getElementById('galaxy-bg');
   for (let i = 0; i < 150; i++) {
     const star = document.createElement('div');
     star.className = 'star';
     const size = Math.random() * 2 + 'px';
-    star.style.width = size;
-    star.style.height = size;
-    star.style.top = Math.random() * 100 + '%';
-    star.style.left = Math.random() * 100 + '%';
+    star.style.width = size; star.style.height = size;
+    star.style.top = Math.random() * 100 + '%'; star.style.left = Math.random() * 100 + '%';
     star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
     bg.appendChild(star);
   }
 
-  // 2. 소리 재생 (강력한 버전)
+  // BGM 제어
   const bgm = document.getElementById('bgm');
   const bgmBtn = document.getElementById('bgm-status');
-
-  function manualPlay() {
-    bgm.play().then(() => {
-      bgmBtn.innerText = '🎵';
-      alert("BGM 활성화 완료! 와탕카!");
-    }).catch(err => alert("파일(bgm.mp3)이 없거나 브라우저가 차단했습니다."));
+  function toggleBGM(e) {
+    e.stopPropagation();
+    if (bgm.paused) { bgm.play().then(() => bgmBtn.innerText = '🎵'); } 
+    else { bgm.pause(); bgmBtn.innerText = '🔇'; }
   }
+  document.addEventListener('click', () => { bgm.play().then(() => bgmBtn.innerText = '🎵').catch(()=>{}); }, {once: true});
 
-  function toggleBGM() {
-    if (bgm.paused) {
-      bgm.play().then(() => bgmBtn.innerText = '🎵');
-    } else {
-      bgm.pause();
-      bgmBtn.innerText = '🔇';
-    }
-  }
-
-  // 화면 터치 시 자동 재생 시도
-  document.addEventListener('touchstart', () => bgm.play().then(() => bgmBtn.innerText = '🎵'), {once: true});
-  document.addEventListener('click', () => bgm.play().then(() => bgmBtn.innerText = '🎵'), {once: true});
-
-  // 3. 유성우 조절 (비처럼 내리지 않게 개수 감소)
+  // 유성우 엔진
   const canvas = document.getElementById('meteor-canvas');
   const ctx = canvas.getContext('2d');
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resize);
-  resize();
+  window.addEventListener('resize', resize); resize();
 
   class Meteor {
     constructor() { this.reset(); }
     reset() {
-      this.x = Math.random() * canvas.width;
-      this.y = -100;
-      this.length = Math.random() * 60 + 40;
-      this.speed = Math.random() * 8 + 4;
-      this.opacity = 0;
-      this.wait = Math.random() * 300; // 등장 전 대기 시간 추가 (넘 많지 않게)
+      this.x = Math.random() * canvas.width; this.y = -100;
+      this.length = Math.random() * 70 + 50; this.speed = Math.random() * 8 + 4;
+      this.opacity = 0; this.wait = Math.random() * 500;
     }
     draw() {
       if (this.wait > 0) return;
@@ -125,23 +151,18 @@
       const grad = ctx.createLinearGradient(this.x, this.y, this.x - this.length, this.y + this.length);
       grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
       grad.addColorStop(1, 'rgba(0, 255, 204, 0)');
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.5;
-      ctx.moveTo(this.x, this.y);
-      ctx.lineTo(this.x - this.length, this.y + this.length);
+      ctx.strokeStyle = grad; ctx.lineWidth = 1.5;
+      ctx.moveTo(this.x, this.y); ctx.lineTo(this.x - this.length, this.y + this.length);
       ctx.stroke();
     }
     update() {
       if (this.wait > 0) { this.wait--; return; }
-      this.x -= this.speed;
-      this.y += this.speed;
+      this.x -= this.speed; this.y += this.speed;
       if (this.opacity < 0.6) this.opacity += 0.02;
       if (this.y > canvas.height + 100) this.reset();
     }
   }
-
-  const meteors = Array.from({ length: 2 }, () => new Meteor()); // 유성 개수를 딱 2개로 제한
-
+  const meteors = Array.from({ length: 2 }, () => new Meteor());
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     meteors.forEach(m => { m.draw(); m.update(); });
