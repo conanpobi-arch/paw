@@ -3,153 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA MAIN SYSTEM V2.42</title>
+<title>NANA MAIN SYSTEM V2.43</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
 
-  /* 우주 배경 레이어 */
-  #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
-  #star-field { position: fixed; inset: 0; z-index: 1; background-image: radial-gradient(white, rgba(255,255,255,0.2) 2px, transparent 40px); background-size: 200px 200px; opacity: 0.15; }
-  
-  /* 유성우 전용 캔버스 */
+  /* 1. 배경 별들 (사라졌던 별들 복구) */
+  #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); }
+  .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* 2. 유성우 캔버스 (빈도 조절) */
   #meteor-canvas { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
   /* 메인 컨텐츠 */
-  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
   
-  /* 커플 이미지 (포비님 요청: profile.png) */
-  .couple-img { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 30px var(--neon); margin-bottom: 30px; object-fit: cover; }
+  .couple-img { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 20px var(--neon); margin-bottom: 20px; object-fit: cover; z-index: 11; }
   
-  .main-title { font-family: 'Orbitron'; font-size: 2.5rem; letter-spacing: 5px; color: var(--neon); text-shadow: 0 0 15px var(--neon); margin-bottom: 50px; text-align: center; }
+  .main-title { font-family: 'Orbitron'; font-size: 2rem; letter-spacing: 4px; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 30px; text-align: center; }
 
-  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 400px; }
-  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 20px; padding: 30px 20px; text-align: center; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; text-decoration: none; color: #fff; }
+  /* 3. 8개 아이콘 그리드 복구 */
+  .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; max-width: 380px; }
+  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 18px 10px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .menu-btn:active { transform: scale(0.95); background: rgba(0, 255, 204, 0.2); }
-  .menu-btn div { font-family: 'Orbitron'; font-size: 14px; color: var(--neon); margin-top: 10px; font-weight: bold; }
-  .menu-btn span { font-size: 32px; }
+  .menu-btn div { font-family: 'Orbitron'; font-size: 11px; color: var(--neon); margin-top: 8px; font-weight: bold; letter-spacing: 1px; }
+  .menu-btn span { font-size: 24px; }
 
   /* BGM 컨트롤 */
-  #bgm-status { position: fixed; bottom: 30px; right: 30px; z-index: 100; font-size: 24px; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+  #bgm-status { position: fixed; bottom: 20px; right: 20px; z-index: 100; width: 50px; height: 50px; background: rgba(0,255,204,0.1); border: 1px solid var(--neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
 </style>
 </head>
 <body>
 
 <div id="galaxy-bg"></div>
-<div id="star-field"></div>
 <canvas id="meteor-canvas"></canvas>
 
 <audio id="bgm" loop preload="auto">
-  <source src="./bgm.mp3" type="audio/mpeg">
+  <source src="bgm.mp3" type="audio/mpeg">
 </audio>
 
 <div id="bgm-status" onclick="toggleBGM()">🔇</div>
 
 <div class="main-container">
   <img src="./profile.png" class="couple-img" alt="Couple">
-  
   <h1 class="main-title">NANA SYSTEM</h1>
 
   <div class="menu-grid">
-    <a href="novel.html" class="menu-btn">
-      <span>📖</span>
-      <div>NOVEL ENGINE</div>
-    </a>
-    <a href="#" class="menu-btn" onclick="alert('준비 중입니다!')">
-      <span>📊</span>
-      <div>ANALYSIS</div>
-    </a>
-    <a href="#" class="menu-btn" onclick="alert('준비 중입니다!')">
-      <span>🌐</span>
-      <div>COMMUNITY</div>
-    </a>
-    <a href="#" class="menu-btn" onclick="alert('준비 중입니다!')">
-      <span>⚙️</span>
-      <div>SETTINGS</div>
-    </a>
+    <a href="novel.html" class="menu-btn"><span>📖</span><div>NOVEL</div></a>
+    <a href="#" class="menu-btn" onclick="manualPlay()"><span>🎵</span><div>BGM FIX</div></a>
+    <a href="#" class="menu-btn"><span>📊</span><div>STATS</div></a>
+    <a href="#" class="menu-btn"><span>🌐</span><div>WEB</div></a>
+    <a href="#" class="menu-btn"><span>💬</span><div>CHAT</div></a>
+    <a href="#" class="menu-btn"><span>⚙️</span><div>SETTING</div></a>
+    <a href="#" class="menu-btn"><span>📂</span><div>FILES</div></a>
+    <a href="#" class="menu-btn"><span>🔐</span><div>ADMIN</div></a>
   </div>
 </div>
 
 <script>
-  // 1. BGM 및 오디오 락 해제 시스템
+  // 1. 별들이 사라지지 않게 배경 별 생성
+  const bg = document.getElementById('galaxy-bg');
+  for (let i = 0; i < 150; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 'px';
+    star.style.width = size;
+    star.style.height = size;
+    star.style.top = Math.random() * 100 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+    bg.appendChild(star);
+  }
+
+  // 2. 소리 재생 (강력한 버전)
   const bgm = document.getElementById('bgm');
   const bgmBtn = document.getElementById('bgm-status');
 
-  function startBGM() {
+  function manualPlay() {
     bgm.play().then(() => {
       bgmBtn.innerText = '🎵';
-      bgmBtn.style.opacity = "1";
-      window.removeEventListener('click', startBGM);
-      window.removeEventListener('touchstart', startBGM);
-    }).catch(e => console.log("소리 재생을 위해 화면 터치가 필요합니다."));
+      alert("BGM 활성화 완료! 와탕카!");
+    }).catch(err => alert("파일(bgm.mp3)이 없거나 브라우저가 차단했습니다."));
   }
 
   function toggleBGM() {
     if (bgm.paused) {
-      bgm.play();
-      bgmBtn.innerText = '🎵';
+      bgm.play().then(() => bgmBtn.innerText = '🎵');
     } else {
       bgm.pause();
       bgmBtn.innerText = '🔇';
     }
   }
 
-  // 브라우저 정책 대응: 첫 클릭 시 오디오 활성화
-  window.addEventListener('click', startBGM);
-  window.addEventListener('touchstart', startBGM);
+  // 화면 터치 시 자동 재생 시도
+  document.addEventListener('touchstart', () => bgm.play().then(() => bgmBtn.innerText = '🎵'), {once: true});
+  document.addEventListener('click', () => bgm.play().then(() => bgmBtn.innerText = '🎵'), {once: true});
 
-  // 2. 유성우(별똥별) 엔진
+  // 3. 유성우 조절 (비처럼 내리지 않게 개수 감소)
   const canvas = document.getElementById('meteor-canvas');
   const ctx = canvas.getContext('2d');
-  
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   window.addEventListener('resize', resize);
   resize();
 
   class Meteor {
     constructor() { this.reset(); }
     reset() {
-      this.x = Math.random() * canvas.width * 1.5;
-      this.y = Math.random() * -canvas.height * 0.5;
-      this.length = Math.random() * 100 + 80;
-      this.speed = Math.random() * 12 + 6;
+      this.x = Math.random() * canvas.width;
+      this.y = -100;
+      this.length = Math.random() * 60 + 40;
+      this.speed = Math.random() * 8 + 4;
       this.opacity = 0;
-      this.maxOpacity = Math.random() * 0.6 + 0.4;
-      this.width = Math.random() * 2 + 1;
+      this.wait = Math.random() * 300; // 등장 전 대기 시간 추가 (넘 많지 않게)
     }
     draw() {
+      if (this.wait > 0) return;
       ctx.beginPath();
-      const gradient = ctx.createLinearGradient(this.x, this.y, this.x - this.length, this.y + this.length);
-      gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-      gradient.addColorStop(0.5, `rgba(0, 255, 204, ${this.opacity * 0.5})`);
-      gradient.addColorStop(1, 'rgba(0, 255, 204, 0)');
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = this.width;
+      const grad = ctx.createLinearGradient(this.x, this.y, this.x - this.length, this.y + this.length);
+      grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+      grad.addColorStop(1, 'rgba(0, 255, 204, 0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
       ctx.moveTo(this.x, this.y);
       ctx.lineTo(this.x - this.length, this.y + this.length);
       ctx.stroke();
     }
     update() {
+      if (this.wait > 0) { this.wait--; return; }
       this.x -= this.speed;
       this.y += this.speed;
-      if(this.opacity < this.maxOpacity) this.opacity += 0.05;
-      if (this.y > canvas.height + 100 || this.x < -100) { this.reset(); }
+      if (this.opacity < 0.6) this.opacity += 0.02;
+      if (this.y > canvas.height + 100) this.reset();
     }
   }
 
-  const meteors = Array.from({ length: 4 }, () => new Meteor());
+  const meteors = Array.from({ length: 2 }, () => new Meteor()); // 유성 개수를 딱 2개로 제한
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    meteors.forEach(m => {
-      m.draw();
-      m.update();
-    });
+    meteors.forEach(m => { m.draw(); m.update(); });
     requestAnimationFrame(animate);
   }
   animate();
