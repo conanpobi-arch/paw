@@ -11,45 +11,43 @@
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
   
-  .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 2vh 20px 20px; text-align: center; }
+  .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 2vh 20px; }
   
-  /* 헤더 내비게이션 */
-  .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; margin-bottom: 10px; }
-  .nav-btn { cursor: pointer; font-size: 24px; transition: 0.3s; opacity: 0.7; }
-  .nav-btn:hover { opacity: 1; transform: scale(1.1); }
-  .engine-title { font-family: 'Orbitron'; color: var(--neon); font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+  /* 상단 헤더 */
+  .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; margin-bottom: 15px; }
+  .nav-btn { cursor: pointer; font-size: 26px; transition: 0.3s; opacity: 0.8; }
+  .engine-title { font-family: 'Orbitron'; color: var(--neon); font-size: 15px; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); }
 
-  /* 입력 카드 세션 */
-  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; outline: none; margin-bottom: 15px; height: 180px; resize: none; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); line-height: 1.6; }
-  textarea.shrink { height: 60px; font-size: 12px; opacity: 0.6; }
+  /* 입력 영역 카드 */
+  .card { background: rgba(0,15,35,0.8); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
+  textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; outline: none; margin-bottom: 15px; height: 250px; resize: none; transition: all 0.4s ease; line-height: 1.6; }
+  textarea.shrink { height: 80px; font-size: 12px; opacity: 0.5; }
   
-  #api-area { overflow: hidden; transition: max-height 0.5s ease; max-height: 80px; }
+  #api-area { overflow: hidden; transition: max-height 0.4s ease; max-height: 100px; }
   #api-area.hide { max-height: 0; margin: 0; opacity: 0; }
-  .master-api { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; }
+  .master-api { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; }
 
-  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; font-size: 13px; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
-  .btn-fire:active { transform: scale(0.98); box-shadow: 0 0 5px var(--neon); }
+  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; font-size: 14px; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,255,204,0.3); transition: 0.3s; }
+  .btn-fire:active { transform: scale(0.97); }
 
-  /* 결과창 (전체화면 오버레이 스타일) */
-  #res-box { display: none; position: fixed; inset: 0; background: #000d1f; z-index: 5000; overflow-y: auto; padding: 50px 25px 120px; font-family: 'Noto Serif KR', serif; line-height: 2.2; font-size: 18px; color: #e0e0e0; white-space: pre-wrap; text-align: left; animation: fadeIn 0.5s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* 🔥 핵심: 번역문 출력 레이어 (가독성 극대화) */
+  #res-box { display: none; position: fixed; inset: 0; background: #050a14; z-index: 5000; overflow-y: auto; padding: 60px 30px 140px; font-family: 'Noto Serif KR', serif; line-height: 2.4; font-size: 19px; color: #d8d8d8; white-space: pre-wrap; text-align: justify; word-break: break-all; }
+  
+  /* 결과창 하단 제어 바 */
+  #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 10, 25, 0.98); border-top: 1px solid var(--border); backdrop-filter: blur(25px); padding: 25px; align-items: center; gap: 15px; }
+  .copy-icon-btn { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; }
+  .back-main-btn { flex: 1; height: 60px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-  /* 결과창 하단 바 */
-  #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 8, 20, 0.95); border-top: 1px solid var(--border); backdrop-filter: blur(20px); padding: 20px; align-items: center; gap: 15px; }
-  .copy-icon-btn { width: 55px; height: 55px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
-  .back-main-btn { flex: 1; height: 55px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-  /* 로딩 오버레이 */
-  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-  .main-loader { width: 50px; height: 50px; border: 4px solid rgba(0,255,204,0.1); border-top: 4px solid var(--neon); border-radius: 50%; animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
+  /* 로딩 시스템 */
+  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+  .main-loader { width: 60px; height: 60px; border: 5px solid rgba(0,255,204,0.1); border-top: 5px solid var(--neon); border-radius: 50%; animation: spin 1s infinite linear; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #loading-msg { color: var(--neon); margin-top: 20px; font-size: 14px; font-family: 'Orbitron'; letter-spacing: 1px; }
-  #loading-step { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 8px; }
+  #loading-msg { color: var(--neon); margin-top: 25px; font-size: 15px; font-family: 'Orbitron'; letter-spacing: 2px; }
+  #loading-step { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 10px; }
 
   @media (max-width: 480px) {
-    #res-box { font-size: 17px; padding: 40px 20px 100px; }
-    .btn-fire { padding: 15px; }
+    #res-box { font-size: 18px; padding: 50px 20px 120px; line-height: 2.3; }
+    textarea { height: 200px; }
   }
 </style>
 </head>
@@ -57,7 +55,7 @@
 <div id="galaxy-bg"></div>
 <div id="loading-overlay">
   <div class="main-loader"></div>
-  <div id="loading-msg">CORE ENGINE ACTIVATING...</div>
+  <div id="loading-msg">ANALYZING CONTEXT...</div>
   <div id="loading-step"></div>
 </div>
 
@@ -69,11 +67,9 @@
   </div>
 
   <div class="card">
-    <textarea id="mainInput" placeholder="번역할 원문을 입력하거나 소설 URL을 붙여넣으세요..."></textarea>
-    <div id="api-area">
-      <input type="password" id="apiKey" class="master-api" placeholder="GEMINI API KEY REQUIRED">
-    </div>
-    <button class="btn-fire" onclick="fireEngine()">▶ FIRE ENGINE (CONTEXT-AWARE)</button>
+    <textarea id="mainInput" placeholder="URL 혹은 원문을 입력하세요..."></textarea>
+    <div id="api-area"><input type="password" id="apiKey" class="master-api" placeholder="GEMINI API KEY"></div>
+    <button class="btn-fire" onclick="fireEngine()">▶ FIRE ENGINE ACTIVE</button>
   </div>
 </div>
 
@@ -94,14 +90,12 @@
     const text = document.getElementById('res-box').innerText;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector('.copy-icon-btn'); 
-      btn.innerText = '✅'; 
-      btn.style.borderColor = 'var(--neon)';
-      setTimeout(() => { btn.innerText = '📋'; btn.style.borderColor = 'var(--border)'; }, 1500);
+      btn.innerText = '✅'; setTimeout(() => { btn.innerText = '📋'; }, 1500);
     });
   }
 
   const CRAWL_STRATEGIES = [
-    { name:'CorsProxy.io', fetch: async(url)=> { const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`); return await r.text(); }},
+    { name:'CorsProxy', fetch: async(url)=> { const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`); return await r.text(); }},
     { name:'AllOrigins', fetch: async(url)=> { const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`); const d=await r.json(); return d.contents; }},
     { name:'CodeTabs', fetch: async(url)=> { const r=await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`); return await r.text(); }}
   ];
@@ -109,49 +103,37 @@
   async function fireEngine() {
     const key = document.getElementById('apiKey').value.trim();
     const input = document.getElementById('mainInput').value.trim();
-    if(!key || !input) return alert("데이터 또는 API 키가 누락되었습니다.");
+    if(!key || !input) return;
 
     const overlay = document.getElementById('loading-overlay');
     overlay.style.display = 'flex';
 
     try {
       let content = input;
-      // URL 감지 시 크롤링 가동
       if(input.startsWith('http')) {
         for(let s of CRAWL_STRATEGIES) {
-          setStep(`${s.name}를 통해 원문을 불러오는 중...`);
-          try { 
-            const res = await s.fetch(input); 
-            if(res && res.length > 400) { content = res; break; } 
-          } catch(e){}
+          setStep(`${s.name} 엔진 가동 중...`);
+          try { const res = await s.fetch(input); if(res && res.length > 300) { content = res; break; } } catch(e){}
         }
       }
 
-      setStep('인물 관계도 분석 및 정밀 번역 처리 중...');
+      setStep('잡설 제거 및 고전 문체 변환 중...');
       
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          contents: [{ 
-            parts: [{ 
-              text: `당신은 전문 번역가입니다. 아래 지침을 엄수하여 결과물만 내놓으십시오.
-1. 오직 번역된 결과물만 출력하고, 다른 어떠한 잡설(설명, 인사, 분석 등)도 포함하지 마십시오.
-2. 대한민국 한자음을 준수하고, 고풍스러운 한국어 문체를 사용하십시오. (중국어 발음 금지)
-3. 원문의 문장 개수와 번역문의 문장 개수를 정확히 일치시키십시오 (No Omission).
-4. 문맥상 화자와 청자의 관계를 분석하여 자연스러운 한국어 구어체로 번역하십시오.
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: `당신은 무협/선협 전문 번역가입니다. 원문을 분석하여 다음 규칙을 따르십시오.
+1. '번역된 본문' 외에는 단 한 글자도 출력하지 마십시오. (해설, 인사, 분석 금지)
+2. 대한민국 한자음을 사용하고 고풍스러운 문체를 사용하십시오.
+3. 원문의 문장 개수와 번역문의 문장 개수를 1:1로 정확히 맞추십시오.
+4. 가독성을 위해 적절한 문단 나누기를 유지하십시오.
 
 원문:
-${content}` 
-            }] 
-          }] 
-        })
+${content}` }] }] })
       });
 
       const data = await response.json();
       const translated = data.candidates[0].content.parts[0].text;
 
-      // UI 상태 업데이트
       document.getElementById('mainInput').classList.add('shrink');
       document.getElementById('api-area').classList.add('hide');
       const rb = document.getElementById('res-box'); 
@@ -159,11 +141,7 @@ ${content}`
       rb.style.display = 'block';
       document.getElementById('result-bottom-bar').style.display = 'flex';
 
-    } catch(e) { 
-      alert("엔진 오류 발생: " + e.message); 
-    } finally { 
-      overlay.style.display = 'none'; 
-    }
+    } catch(e) { alert("ERROR: " + e.message); } finally { overlay.style.display = 'none'; }
   }
 </script>
 </body>
