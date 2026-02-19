@@ -3,25 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA NOVEL ENGINE V45.6</title>
+<title>NANA NOVEL ENGINE V45.8</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; position: fixed; }
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
+  
   .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 2vh 20px; }
+  
   .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; margin-bottom: 15px; }
   .engine-title { font-family: 'Orbitron'; color: var(--neon); font-size: 15px; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); }
+
   .card { background: rgba(0,15,35,0.8); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
   textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; outline: none; margin-bottom: 15px; height: 250px; resize: none; transition: all 0.4s ease; line-height: 1.6; }
   textarea.shrink { height: 80px; font-size: 11px; opacity: 0.5; }
+  
   #api-area { overflow: hidden; transition: max-height 0.4s ease; max-height: 100px; }
   #api-area.hide { max-height: 0; margin: 0; opacity: 0; }
   .master-api { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; }
+
   .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(0,255,204,0.3); }
 
-  /* 🔥 번역문 가독성 극대화 레이어 */
+  /* 번역문 가독성 최적화 레이어 */
   #res-box { display: none; position: fixed; inset: 0; background: #050a14; z-index: 5000; overflow-y: auto; padding: 80px 35px 140px; font-family: 'Noto Serif KR', serif; line-height: 2.6; font-size: 20px; color: #e0e0e0; white-space: pre-wrap; text-align: justify; word-break: break-all; }
   
   #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 10, 25, 0.98); border-top: 1px solid var(--border); backdrop-filter: blur(25px); padding: 25px; align-items: center; gap: 15px; }
@@ -47,7 +52,7 @@
 <div class="container">
   <div class="nav-header">
     <div onclick="location.href='index.html'" style="cursor:pointer; font-size:26px;">🏠</div>
-    <div class="engine-title">NANA NOVEL V45.6</div>
+    <div class="engine-title">NANA NOVEL V45.8</div>
     <div onclick="document.getElementById('mainInput').value=''" style="cursor:pointer; font-size:26px;">🗑️</div>
   </div>
   <div class="card">
@@ -82,10 +87,8 @@
     });
   }
 
-  // HTML 태그 제거 및 텍스트 정제 함수
   function cleanContent(html) {
     let doc = new DOMParser().parseFromString(html, 'text/html');
-    // 스크립트, 스타일, 광고 태그 제거
     const trash = doc.querySelectorAll('script, style, ins, ads, .ads, #ads');
     trash.forEach(t => t.remove());
     return doc.body.innerText || doc.body.textContent;
@@ -109,26 +112,25 @@
       if(input.startsWith('http')) {
         for(let s of CRAWL_STRATEGIES) {
           logStep(`${s.name} 시도...`);
-          try { 
-            const res = await s.fetch(input); 
-            if(res && res.length > 300) { rawData = res; break; }
-          } catch(e) { logStep(`${s.name} 실패`, 'fail'); }
+          try { const res = await s.fetch(input); if(res && res.length > 300) { rawData = res; break; } } 
+          catch(e) { logStep(`${s.name} 실패`, 'fail'); }
         }
       }
 
-      // 태그 세척
       const finalInput = cleanContent(rawData);
-      logStep("태그 제거 및 텍스트 정제 완료");
+      logStep("텍스트 정제 및 엔진 최적화 완료");
 
+      // 🔥 교정된 프롬프트: 한자음 나열 금지 및 의역 강화
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: `당신은 무협/선협 전문 번역가입니다.
+        body: JSON.stringify({ contents: [{ parts: [{ text: `당신은 무협/선협 전문 번역가입니다. 독자가 한국어 소설을 읽는 듯한 느낌을 받도록 아래 지침을 엄수하십시오.
+
 지침:
-1. 원문의 HTML 태그나 불필요한 기호를 모두 제거하고 '순수한 한국어 번역문'만 출력하십시오.
-2. 한자음을 나열하지 말고, 한국 독자가 읽기 편하도록 문맥에 맞춰 유려하게 해석(의역)하십시오.
-3. 고풍스러운 무협지 문체를 사용하되, 고유 명사는 대한민국 한자음 표준을 따르십시오.
-4. 문장 개수를 일치시키고, 대화문은 생동감 있게 번역하십시오.
-5. 인사말이나 분석 등 잡설은 일체 금지합니다.
+1. **절대 한자음만 나열하지 마십시오.** 문맥을 파악하여 한국 독자가 이해하기 쉬운 유려한 문장으로 의역하십시오.
+2. 인물 이름, 문파명, 지명, 무공명에 한해서만 대한민국 표준 한자음을 적용하십시오. (예: 叶辰 -> 엽진)
+3. 소설의 긴장감과 문체(무협지풍)를 유지하며, 한국어 어순에 맞게 매끄럽게 서술하십시오.
+4. 원문의 문장 개수와 번역문의 문장 개수를 1:1로 일치시키십시오.
+5. 결과물 외의 인사말, 해설 등 잡설은 일절 금지합니다.
 
 원문:
 ${finalInput}` }] }] })
@@ -142,7 +144,7 @@ ${finalInput}` }] }] })
       rb.innerText = translated; rb.style.display = 'block';
       document.getElementById('result-bottom-bar').style.display = 'flex';
     } catch(e) { 
-      logStep("오류: " + e.message, "fail");
+      logStep("오류 발생: " + e.message, "fail");
     } finally { 
       setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 500);
     }
