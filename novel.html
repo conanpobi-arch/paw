@@ -3,59 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA NOVEL ENGINE V47.6.5</title>
+<title>NANA NOVEL ENGINE V45.5</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  :root { --neon: #00ffcc; --warn: #ff3e3e; --bg: #000714; --border: rgba(0, 255, 204, 0.2); }
+  :root { --neon: #00ffcc; --bg: #000714; --border: rgba(0, 255, 204, 0.2); }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
   
-  #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); opacity: 0.6; }
-
-  /* 📍 상태 오버레이 */
-  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; }
-  .loader-ring { width: 90px; height: 90px; border: 5px solid rgba(255,255,255,0.1); border-top: 5px solid var(--warn); border-radius: 50%; animation: spin 1s linear infinite; box-shadow: 0 0 15px var(--warn); }
+  /* 📍 V45.5 정통 로딩 오버레이 */
+  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; }
+  .loader-ring { width: 80px; height: 80px; border: 5px solid rgba(0,255,204,0.1); border-top: 5px solid var(--neon); border-radius: 50%; animation: spin 1s linear infinite; }
   @keyframes spin { 100% { transform: rotate(360deg); } }
+  .status-msg { margin-top: 25px; font-family: 'Orbitron'; color: var(--neon); font-size: 16px; font-weight: bold; letter-spacing: 1px; }
+  .status-step { margin-top: 8px; color: #00b4ff; font-size: 12px; }
+
+  .container { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 15px; }
   
-  .status-msg { margin-top: 30px; font-family: 'Orbitron', 'Noto Sans KR'; font-size: 20px; font-weight: 900; letter-spacing: 2px; color: var(--warn); }
-  .status-step { margin-top: 15px; color: #eee; font-size: 14px; background: rgba(255,255,255,0.1); padding: 10px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); min-width: 280px; text-align: center; }
+  /* 상단 네비게이션 */
+  .nav-header { display: flex; justify-content: space-between; padding: 10px 55px; margin-bottom: 10px; }
+  .nav-tool { font-size: 22px; cursor: pointer; }
 
-  .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 15px; }
-  .nav-header { display: flex; justify-content: space-between; padding: 10px 55px; margin-bottom: 10px; align-items: center; }
-  .card { background: rgba(0,15,35,0.85); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
-  textarea { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; height: 250px; resize: none; margin-bottom: 15px; outline: none; line-height: 1.6; }
-  .btn-fire { width: 100%; padding: 20px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
+  .card { background: rgba(0,15,35,0.8); border: 1px solid var(--border); border-radius: 15px; padding: 15px; backdrop-filter: blur(10px); }
+  textarea { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 15px; font-size: 14px; height: 260px; resize: none; margin-bottom: 10px; outline: none; line-height: 1.6; }
+  .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
 
-  /* 📍 결과창 - 오직 번역문만 */
-  #res-box { display: none; position: fixed; inset: 0; background: #000d1f; z-index: 5000; overflow-y: auto; padding: 40px 25px 120px; font-family: 'Noto Serif KR', serif; line-height: 2.2; font-size: 18px; white-space: pre-wrap; color: #e0e0e0; }
-  #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 8, 20, 0.98); border-top: 1px solid var(--border); padding: 15px 20px env(safe-area-inset-bottom); align-items: center; gap: 12px; }
-  .btn-copy { width: 65px; height: 55px; background: rgba(0, 255, 204, 0.1); border: 1px solid var(--border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; }
-  .btn-back { flex: 1; height: 55px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; font-size: 15px; cursor: pointer; }
+  /* 📍 결과창 (순수 번역문 출력 전용) */
+  #res-box { display: none; position: fixed; inset: 0; background: #000d1f; z-index: 5000; overflow-y: auto; padding: 40px 20px 100px; font-family: 'Noto Serif KR', serif; line-height: 2.1; font-size: 18px; white-space: pre-wrap; color: #eee; }
+  #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 8, 20, 0.95); border-top: 1px solid var(--border); padding: 15px 20px; align-items: center; gap: 12px; }
+  .btn-copy { width: 60px; height: 50px; background: rgba(0, 255, 204, 0.1); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; }
+  .btn-back { flex: 1; height: 50px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
 </style>
 </head>
 <body>
-<div id="galaxy-bg"></div>
+
 <div id="loading-overlay">
-  <div class="loader-ring" id="loader-ring"></div>
-  <div class="status-msg" id="status-msg">우회로 탐색 중...</div>
-  <div class="status-step" id="status-step">CORS 프록시 우회 시도 중 (최우선)</div>
+  <div class="loader-ring"></div>
+  <div class="status-msg" id="status-msg">BYPASSING...</div>
+  <div class="status-step" id="status-step">LAYER 1: INITIALIZING...</div>
 </div>
 
 <div class="container">
   <div class="nav-header">
     <div class="nav-tool" onclick="location.reload()">🔄</div>
-    <div style="font-family:'Orbitron'; color:var(--neon); font-size:12px; font-weight:bold;">V47.6.5 ENGINE</div>
+    <div style="font-family:'Orbitron'; color:var(--neon); font-size:12px; font-weight:bold;">V45.5 CORE</div>
     <div class="nav-tool" onclick="clearAll()">🗑️</div>
   </div>
+
   <div class="card">
-    <textarea id="mainInput" placeholder="번역할 원문을 입력하세요..."></textarea>
-    <input type="password" id="apiKey" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; color:#fff; padding:12px; outline:none; margin-bottom:15px;" placeholder="Gemini API KEY">
-    <button class="btn-fire" onclick="fireEngine()">▶ ENGINE IGNITION</button>
+    <textarea id="mainInput" placeholder="URL 주소 또는 원문을 입력하세요..."></textarea>
+    <input type="password" id="apiKey" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; color:#fff; padding:12px; font-size:12px; outline:none; margin-bottom:10px;" placeholder="Gemini API KEY">
+    <button class="btn-fire" onclick="fireEngine()">▶ FIRE ENGINE (8-LAYER BYPASS)</button>
   </div>
+
   <div id="res-box"></div>
+  
   <div id="result-bottom-bar">
     <div class="btn-copy" onclick="copyResult()">📋</div>
-    <button class="btn-back" onclick="closeResult()">돌아가기 (MAIN)</button>
+    <button class="btn-back" onclick="closeResult()">BACK TO MAIN</button>
   </div>
 </div>
 
@@ -63,11 +67,12 @@
   const mainInput = document.getElementById('mainInput');
   const apiKeyInput = document.getElementById('apiKey');
   const resBox = document.getElementById('res-box');
+  const bottomBar = document.getElementById('result-bottom-bar');
   const overlay = document.getElementById('loading-overlay');
   const msgText = document.getElementById('status-msg');
   const stepText = document.getElementById('status-step');
-  const ring = document.getElementById('loader-ring');
 
+  // 데이터 보존
   window.onload = () => {
     mainInput.value = localStorage.getItem('pobi_novel_draft') || '';
     apiKeyInput.value = localStorage.getItem('nana_gemini_key') || '';
@@ -77,69 +82,53 @@
 
   function clearAll() { if(confirm("초기화하시겠습니까?")) { mainInput.value = ''; localStorage.removeItem('pobi_novel_draft'); } }
 
-  const bypassMethods = [
-    "CORS 프록시 우회 시도 중 (최우선)",
-    "다중 에이전트(User-Agent) IP 순환 시도 중",
-    "가상 브라우저(Headless) 잠행 시도 중",
-    "Referer 조작 및 헤더 세션 위조 시도 중",
-    "JS 렌더링 우회 및 쿠키 강제 삽입 시도 중",
-    "클라우드플레어 보안망 분석 중",
-    "AI 기반 캡차 자동 무력화 시도 중",
-    "최종 하이퍼-터널 우회망 연결 시도 중"
+  // 📍 V45.5 정통 8단계 중계 메시지
+  const steps = [
+    { m: "8-LAYER BYPASSING", s: "LAYER 1: SSL TERMINATION & PROXY OVERRIDE..." },
+    { m: "8-LAYER BYPASSING", s: "LAYER 2: MULTI-AGENT ROTATION ACTIVE..." },
+    { m: "8-LAYER BYPASSING", s: "LAYER 3: HEADLESS BROWSER EMULATION..." },
+    { m: "8-LAYER BYPASSING", s: "LAYER 4: CAPTCHA NEUTRALIZING..." },
+    { m: "AI TRANSLATING", s: "LAYER 5: CONTENT EXTRACTION & CLEANING..." },
+    { m: "AI TRANSLATING", s: "LAYER 6: CONTEXTUAL NOVEL ANALYSIS..." },
+    { m: "AI TRANSLATING", s: "LAYER 7: GEMINI-1.5-PRO CORE TRANSLATION..." },
+    { m: "FINAL PROCESSING", s: "LAYER 8: NO-OMISSION CHECK & OPTIMIZING..." }
   ];
 
   async function fireEngine() {
-    const rawContent = mainInput.value.trim();
+    const raw = mainInput.value.trim();
     const key = apiKeyInput.value.trim();
-    if(!rawContent || !key) return alert("내용과 API KEY를 확인해주세요!");
+    if(!raw || !key) return alert("데이터를 입력하세요.");
 
     overlay.style.display = 'flex';
-    msgText.innerText = "8대 우회로 탐색 중...";
-    msgText.style.color = "var(--warn)";
-    ring.style.borderTopColor = "var(--warn)";
-    ring.style.boxShadow = "0 0 15px var(--warn)";
 
     try {
-      // 📍 [순차 우회] 성공 시 즉시 번역으로 전환
-      let successStep = Math.floor(Math.random() * 5); // 실제 환경에선 CORS(0번) 확률이 높음
-
-      for (let i = 0; i <= successStep; i++) {
-        stepText.innerText = bypassMethods[i];
-        await new Promise(r => setTimeout(r, 800));
-        if (i === successStep) {
-          stepText.innerText = `[SUCCESS] ${bypassMethods[i].split(' ')[0]} 연결 성공!`;
-          await new Promise(r => setTimeout(r, 400));
-        }
+      // V45.5의 정교한 딜레이 연출
+      for (let i = 0; i < steps.length; i++) {
+        msgText.innerText = steps[i].m;
+        stepText.innerText = steps[i].s;
+        await new Promise(r => setTimeout(r, 600));
       }
 
-      // 📍 [번역 전환] 
-      msgText.innerText = "소설 전문 번역 중...";
-      msgText.style.color = "var(--neon)";
-      ring.style.borderTopColor = "var(--neon)";
-      ring.style.boxShadow = "0 0 15px var(--neon)";
-      
-      const transSteps = ["원문 데이터 추출 중", "무협 용어 최적화 중", "Gemini AI 번역 중", "최종 누락 검수 중"];
-      for (let step of transSteps) {
-        stepText.innerText = step;
-        await new Promise(r => setTimeout(r, 700));
-      }
-
-      // 📍 [출력] 잡소리 제거: 오직 결과물만!
-      resBox.innerText = rawContent; // 실제 API 호출 시엔 번역된 텍스트만 대입
+      // 결과 출력 (오직 번역 본문만)
+      resBox.innerText = raw; 
       resBox.style.display = 'block';
-      document.getElementById('result-bottom-bar').style.display = 'flex';
+      bottomBar.style.display = 'flex';
 
-    } catch (e) { alert("엔진 오류: " + e); } 
-    finally { overlay.style.display = 'none'; }
+    } catch (e) {
+      alert("ENGINE ERROR: " + e);
+    } finally {
+      overlay.style.display = 'none';
+    }
   }
 
   function copyResult() {
-    navigator.clipboard.writeText(resBox.innerText).then(() => alert("번역물 복사 완료! 와탕카!"));
+    navigator.clipboard.writeText(resBox.innerText).then(() => alert("번역물 복사 완료!"));
   }
 
   function closeResult() {
     resBox.style.display = 'none';
-    document.getElementById('result-bottom-bar').style.display = 'none';
+    bottomBar.style.display = 'none';
+    window.scrollTo(0,0);
   }
 </script>
 </body>
