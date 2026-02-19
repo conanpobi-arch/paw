@@ -11,40 +11,39 @@
   body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; }
   #galaxy-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); overflow: hidden; }
   .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) infinite; }
-  .shooting-star { position: absolute; top: 50%; left: 50%; width: 2px; height: 2px; background: #fff; border-radius: 50%; box-shadow: 0 0 0 4px rgba(255,255,255,0.1), 0 0 20px rgba(255,255,255,1); animation: animate 3s linear infinite; }
+  .shooting-star { position: absolute; top: 50%; left: 50%; width: 2px; height: 2px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; animation: animate 3s linear infinite; }
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
   @keyframes animate { 0% { transform: rotate(315deg) translateX(0); opacity: 1; } 100% { transform: rotate(315deg) translateX(-1000px); opacity: 0; } }
 
   .container { position: relative; z-index: 2; max-width: 850px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: 5vh 20px 20px; text-align: center; }
-  .couple-main { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 10px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 15px rgba(0,255,204,0.3); z-index: 10; }
-  h1 { font-family: 'Orbitron', sans-serif; font-size: 18px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin-bottom: 25px; z-index: 10; }
+  .couple-main { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--neon); margin: 0 auto 10px; background: url('./profile.png') center/cover no-repeat, #222; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
+  h1 { font-family: 'Orbitron', sans-serif; font-size: 18px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin-bottom: 25px; }
 
-  /* 📍 [수정] 오디오 컨트롤러: 모바일 겹침 방지 */
-  .audio-ctrl { position: fixed; top: 15px; left: 15px; z-index: 1001; display: flex; align-items: center; gap: 5px; cursor: pointer; background: rgba(0,255,204,0.1); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(5px); }
+  /* 📍 모바일 겹침 방지 오디오 컨트롤러 */
+  .audio-ctrl { position: fixed; top: 15px; left: 15px; z-index: 2001; display: flex; align-items: center; gap: 5px; cursor: pointer; background: rgba(0,255,204,0.1); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(5px); }
   .music-icon { font-size: 16px; color: var(--neon); }
   .music-text { font-family: 'Orbitron'; font-size: 9px; color: var(--neon); }
 
   .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; z-index: 10; }
-  .app-card { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 12px 5px; cursor: pointer; backdrop-filter: blur(10px); }
+  .app-card { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 15px; padding: 12px 5px; cursor: pointer; backdrop-filter: blur(10px); transition: 0.2s; }
+  .app-card:active { transform: scale(0.95); }
   .app-icon { font-size: 24px; margin-bottom: 5px; display: block; }
   .app-label { font-size: 10px; color: #ccc; }
 
-  /* 📍 [수정] 앱 레이어 및 닫기 버튼 최적화 */
-  #app-layer { position: fixed; inset: 0; background: #000714; z-index: 1000; display: none; flex-direction: column; }
+  /* 📍 앱 레이어 및 닫기 버튼 */
+  #app-layer { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
   #app-frame { width: 100%; height: 100%; border: none; }
-  .close-btn { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--neon); z-index: 1010; cursor: pointer; background: rgba(0,0,0,0.6); border-radius: 50%; }
+  .close-btn { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--neon); z-index: 2010; cursor: pointer; background: rgba(0,0,0,0.6); border-radius: 50%; }
 
   @media screen and (max-width: 480px) {
-    .music-text { display: none; } /* 모바일은 아이콘만 */
+    .music-text { display: none; }
     .audio-ctrl { top: 10px; left: 10px; padding: 8px; }
     .close-btn { top: 8px; right: 8px; }
   }
 
-  #history-panel { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(0, 11, 26, 0.98); border-top: 1px solid var(--neon); transition: 0.4s; z-index: 2000; padding: 25px 20px; max-height: 60vh; overflow-y: auto; }
+  #history-panel { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(0, 11, 26, 0.98); border-top: 1px solid var(--neon); transition: 0.4s; z-index: 3000; padding: 25px 20px; max-height: 60vh; overflow-y: auto; }
   #history-panel.active { bottom: 0; }
   .history-btn { font-size: 10px; color: var(--neon); opacity: 0.5; cursor: pointer; margin-top: auto; padding: 15px; text-decoration: underline; }
-  .hist-item { display: flex; font-size: 11px; margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,204,0.1); padding-bottom: 4px; text-align: left; }
-  .hist-v { color: var(--neon); font-weight: bold; min-width: 45px; }
 </style>
 </head>
 <body onclick="hideHistory()">
@@ -56,30 +55,23 @@
   <h1>NANA HUB <span>V47.6</span></h1>
   <div class="dashboard">
     <div class="app-card" onclick="openApp('novel', event)"><span class="app-icon">📖</span><span class="app-label">소설번역기</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">📥</span><span class="app-label">동영상 다운</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">💰</span><span class="app-label">가계부</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">📅</span><span class="app-label">일정표</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">📰</span><span class="app-label">뉴스</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">🙏</span><span class="app-label">기도</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">🎯</span><span class="app-label">목표</span></div>
-    <div class="app-card" onclick="alert('점검 중')"><span class="app-icon">🎬</span><span class="app-label">영화관</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">📥</span><span class="app-label">동영상 다운</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">💰</span><span class="app-label">가계부</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">📅</span><span class="app-label">일정표</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">📰</span><span class="app-label">뉴스섬머리</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">🙏</span><span class="app-label">오늘의 기도</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">🎯</span><span class="app-label">목표/평가</span></div>
+    <div class="app-card" onclick="alert('준비중')"><span class="app-icon">🎬</span><span class="app-label">영화감상실</span></div>
   </div>
   <div class="history-btn" onclick="toggleHistory(event)">SYSTEM VERSION HISTORY (10)</div>
 </div>
 <div id="app-layer"><div class="close-btn" onclick="closeApp()">✕</div><iframe id="app-frame" src=""></iframe></div>
 <div id="history-panel">
-  <div style="color:var(--neon); font-size:13px; margin-bottom:20px; font-weight:bold;">VERSION HISTORY</div>
-  <div class="hist-item"><span class="hist-v">V47.6</span> 모바일 레이아웃 겹침 방지 최적화 패치</div>
-  <div class="hist-item"><span class="hist-v">V47.5</span> BGM 엔진 및 네온 컨트롤러 통합</div>
-  <div class="hist-item"><span class="hist-v">V47.0</span> 밤하늘 유성 엔진(Meteor) 복구</div>
-  <div class="hist-item"><span class="hist-v">V46.8</span> 아이콘 명칭 수정 및 히스토리 토글 완성</div>
-  <div class="hist-item"><span class="hist-v">V45.7</span> 사파리 리프레시 대비 결과 자동 복구 엔진</div>
-  <div class="hist-item"><span class="hist-v">V45.5</span> 인물 관계 문맥 분석 프로토콜 강화</div>
-  <div class="hist-item"><span class="hist-v">V45.4</span> CorsProxy.io 0순위 배치 및 가속</div>
-  <div class="hist-item"><span class="hist-v">V45.2</span> Gemini 2.0 API & 8중 크롤링 통합</div>
-  <div class="hist-item"><span class="hist-v">V45.1</span> 레이아웃 최적화 및 자동 비우기</div>
-  <div class="hist-item"><span class="hist-v">V45.0</span> 8중 우회 크롤링 엔진 통합</div>
-</div>
+  <div style="color:var(--neon); font-size:13px; margin-bottom:20px; font-weight:bold; font-family:'Orbitron';">VERSION HISTORY</div>
+  <div style="font-size:11px; color:#ccc; margin-bottom:8px;"><span style="color:var(--neon); font-weight:bold; min-width:45px; display:inline-block;">V47.6</span> 전체 시스템 버전 동기화 및 번역 엔진 점화 계통 수리</div>
+  <div style="font-size:11px; color:#ccc; margin-bottom:8px;"><span style="color:var(--neon); font-weight:bold; min-width:45px; display:inline-block;">V47.5</span> 배경음악(BGM) 엔진 및 네온 컨트롤러 통합</div>
+  <div style="font-size:11px; color:#ccc; margin-bottom:8px;"><span style="color:var(--neon); font-weight:bold; min-width:45px; display:inline-block;">V47.0</span> 밤하늘 유성 엔진(Meteor) 복구 완료</div>
+  </div>
 <script>
   const bg = document.getElementById('galaxy-bg');
   for(let i=0; i<80; i++){
