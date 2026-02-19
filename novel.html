@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA NOVEL ENGINE V45.8.5</title>
+<title>NANA NOVEL ENGINE V45.8.6</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
@@ -18,40 +18,43 @@
 
   .card { background: rgba(0,15,35,0.75); border: 1px solid var(--border); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); }
   textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 12px; color: #fff; padding: 15px; font-size: 15px; outline: none; margin-bottom: 15px; height: 250px; resize: none; transition: all 0.4s ease; line-height: 1.6; }
-  textarea.shrink { height: 80px; font-size: 11px; opacity: 0.5; }
   
   .master-api { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; color: var(--neon); padding: 12px; font-size: 13px; outline: none; margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; }
   .btn-fire { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(0,255,204,0.3); }
 
+  /* 결과창 */
   #res-box { display: none; position: fixed; inset: 0; background: #050a14; z-index: 5000; overflow-y: auto; padding: 80px 35px 140px; font-family: 'Noto Serif KR', serif; line-height: 2.6; font-size: 20px; color: #e0e0e0; white-space: pre-wrap; text-align: justify; word-break: break-all; }
-  
   #result-bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 5001; background: rgba(0, 10, 25, 0.98); border-top: 1px solid var(--border); backdrop-filter: blur(25px); padding: 25px; align-items: center; gap: 15px; }
   .copy-icon-btn { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; }
   .back-main-btn { flex: 1; height: 60px; background: linear-gradient(135deg, var(--neon), #00b4ff); color: #000; border: none; border-radius: 15px; font-weight: 900; font-family: 'Orbitron'; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-  .main-loader { width: 60px; height: 60px; border: 5px solid rgba(0,255,204,0.1); border-top: 5px solid var(--neon); border-radius: 50%; animation: spin 1s infinite linear; }
-  #strategy-log { color: #fff; font-size: 10px; margin-top: 15px; width: 300px; text-align: left; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-family: monospace; max-height: 200px; overflow-y: auto; }
+  /* 로딩 시스템 */
+  #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+  .main-loader { width: 50px; height: 50px; border: 4px solid rgba(0,255,204,0.1); border-top: 4px solid var(--neon); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #strategy-log { color: #fff; font-size: 11px; width: 320px; text-align: left; background: rgba(0,20,40,0.8); padding: 15px; border-radius: 12px; font-family: monospace; border: 1px solid var(--border); max-height: 250px; overflow-y: auto; }
 </style>
 </head>
 <body>
-<div id="galaxy-bg"></div>
-<div id="star-field"></div>
+<div id="galaxy-bg"></div><div id="star-field"></div>
+
 <div id="loading-overlay">
   <div class="main-loader"></div>
+  <div style="color:var(--neon); font-family:'Orbitron'; font-size:12px; margin-bottom:10px; letter-spacing:2px;">ENGINE IGNITION...</div>
   <div id="strategy-log"></div>
+  <button onclick="location.reload()" style="margin-top:20px; background:none; border:1px solid #ff4444; color:#ff4444; padding:5px 15px; border-radius:10px; font-size:10px;">CANCEL</button>
 </div>
 
 <div class="container">
   <div class="nav-header">
     <div onclick="location.href='index.html'" style="cursor:pointer; font-size:26px;">🏠</div>
-    <div class="engine-title">NANA NOVEL V45.8.5</div>
+    <div class="engine-title">NANA NOVEL V45.8.6</div>
     <div onclick="document.getElementById('mainInput').value=''" style="cursor:pointer; font-size:26px;">🗑️</div>
   </div>
   <div class="card">
     <textarea id="mainInput" placeholder="URL 혹은 원문을 입력하세요..."></textarea>
     <div id="api-area"><input type="password" id="apiKey" class="master-api" placeholder="GEMINI API KEY"></div>
-    <button class="btn-fire" onclick="fireEngine()">▶ FIRE ENGINE ACTIVE</button>
+    <button class="btn-fire" id="fireBtn" onclick="fireEngine()">▶ FIRE ENGINE ACTIVE</button>
   </div>
 </div>
 
@@ -68,10 +71,13 @@
   function logStep(msg, type='try') {
     const log = document.getElementById('strategy-log');
     const entry = document.createElement('div');
-    entry.style.marginBottom = "4px"; entry.style.borderLeft = type === 'fail' ? "2px solid #ff4444" : "2px solid var(--neon)";
-    entry.style.paddingLeft = "8px"; entry.style.color = type === 'fail' ? "#ff8888" : "#fff";
-    entry.textContent = `> ${msg}`;
+    entry.style.marginBottom = "6px";
+    entry.style.borderLeft = type === 'fail' ? "3px solid #ff4444" : (type === 'success' ? "3px solid #00ff00" : "3px solid var(--neon)");
+    entry.style.paddingLeft = "10px";
+    entry.style.color = type === 'fail' ? "#ff8888" : (type === 'success' ? "#88ff88" : "#fff");
+    entry.textContent = `[${new Date().toLocaleTimeString('ko-KR', {hour12:false})}] ${msg}`;
     log.prepend(entry);
+    console.log(msg);
   }
 
   function copyResult() {
@@ -81,82 +87,79 @@
     });
   }
 
-  // 🔥 포비님을 위한 8대 무적 크롤링 전략 리스트
   const CRAWL_STRATEGIES = [
-    { name:'1. CorsProxy.io', fetch: async(u)=> { const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(u)}`); return await r.text(); }},
-    { name:'2. AllOrigins (Direct)', fetch: async(u)=> { const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`); const d=await r.json(); return d.contents; }},
-    { name:'3. CodeTabs Proxy', fetch: async(u)=> { const r=await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`); return await r.text(); }},
-    { name:'4. WeeGet (Wayback API)', fetch: async(u)=> { const r=await fetch(`https://archive.org/wayback/available?url=${u}`); const d=await r.json(); const snap = d.archived_snapshots.closest.url; const r2=await fetch(`https://corsproxy.io/?${encodeURIComponent(snap)}`); return await r2.text(); }},
-    { name:'5. Proxy.inc (Fallback)', fetch: async(u)=> { const r=await fetch(`https://thingproxy.freeboard.io/fetch/${u}`); return await r.text(); }},
-    { name:'6. JSONP Bridge', fetch: async(u)=> { const r=await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`); return await r.text(); }},
-    { name:'7. Worker Node 1', fetch: async(u)=> { const r=await fetch(`https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all`); return null; }}, // 예시용 (실제 구현시 유료 API 전환 포인트)
-    { name:'8. Google Cache Flow', fetch: async(u)=> { const r=await fetch(`https://corsproxy.io/?${encodeURIComponent('https://webcache.googleusercontent.com/search?q=cache:'+u)}`); return await r.text(); }}
+    { name:'CorsProxy', url: (u) => `https://corsproxy.io/?${encodeURIComponent(u)}` },
+    { name:'AllOrigins', url: (u) => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
+    { name:'CodeTabs', url: (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
+    { name:'ThingProxy', url: (u) => `https://thingproxy.freeboard.io/fetch/${u}` }
   ];
 
   async function fireEngine() {
     const key = document.getElementById('apiKey').value.trim();
     const input = document.getElementById('mainInput').value.trim();
-    if(!key || !input) return;
     
-    document.getElementById('strategy-log').innerHTML = '';
+    if(!key) { alert("API KEY가 없습니다."); return; }
+    if(!input) { alert("원문이나 URL을 입력하세요."); return; }
+
+    // 🔥 즉시 UI 반응
     document.getElementById('loading-overlay').style.display = 'flex';
+    document.getElementById('strategy-log').innerHTML = '';
+    logStep("엔진 점화 시작...");
+
+    let rawData = input;
 
     try {
-      let rawData = input;
       if(input.startsWith('http')) {
+        logStep("URL 감지: 크롤링 모드 전환");
         let success = false;
+        
         for(let s of CRAWL_STRATEGIES) {
           logStep(`${s.name} 엔진 시도 중...`);
-          try { 
-            const res = await s.fetch(input); 
-            if(res && res.length > 200) { 
-                let doc = new DOMParser().parseFromString(res, 'text/html');
-                // 소설 사이트 특유의 쓰레기 텍스트(광고 등) 제거 로직
-                doc.querySelectorAll('script, style, ins, ads, .ads, #ads').forEach(el => el.remove());
-                rawData = doc.body.innerText || doc.body.textContent;
-                logStep(`${s.name} 연결 성공!`, 'success');
-                success = true; break; 
+          try {
+            const res = await fetch(s.url(input), { method: 'GET' });
+            let text = "";
+            if(s.name === 'AllOrigins') {
+              const json = await res.json();
+              text = json.contents;
+            } else {
+              text = await res.text();
             }
-          } catch(e) { logStep(`${s.name} 실패`, 'fail'); }
+
+            if(text && text.length > 200) {
+              const doc = new DOMParser().parseFromString(text, 'text/html');
+              doc.querySelectorAll('script, style, ads, iframe, ins').forEach(e => e.remove());
+              rawData = doc.body.innerText || doc.body.textContent;
+              logStep(`${s.name} 데이터 획득 성공!`, 'success');
+              success = true; break;
+            }
+          } catch(err) { logStep(`${s.name} 연결 실패`, 'fail'); }
         }
-        if(!success) throw new Error("8대 엔진 모두 차단되었습니다.");
+        if(!success) throw new Error("모든 우회 엔진이 차단되었습니다.");
       }
 
-      logStep("Gemini 인공지능 번역 요청 중...");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+      logStep("Gemini AI에 데이터 전송 중...");
+      const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `당신은 무협/선협 전문 번역가입니다. 독자가 한국어 무협 소설을 읽는 듯한 느낌을 받도록 하십시오.
-
-지침:
-1. 주인공 성씨 '何'는 반드시 '하'로 번역하십시오(예: 何子衿 -> '하자금'). 절대 '남'이나 다른 성씨로 바꾸지 마십시오.
-2. **절대 한자음만 나열하지 마십시오.** 문장을 한국어 어순과 소설적 문체로 풍부하게 의역하십시오.
-3. 인명, 지명, 무공명에만 표준 한자음을 적용하고 나머지는 자연스럽게 풀어내십시오.
-4. 원문의 문장 개수를 유지하며, 본문 외의 설명이나 인사는 하지 마십시오.
-
-원문:
-${rawData}`
-            }]
-          }]
+          contents: [{ parts: [{ text: `당신은 무협 소설 번역가입니다. 주인공 성씨 '何'는 무조건 '하'로 번역하세요(예: 하자금). 원문을 한국 소설처럼 유려하게 번역하고 본문만 출력하세요. 원문: ${rawData}` }] }]
         })
       });
 
-      const data = await response.json();
-      const translated = data.candidates[0].content.parts[0].text;
-
-      document.getElementById('mainInput').classList.add('shrink');
-      const rb = document.getElementById('res-box');
-      rb.innerText = translated;
-      rb.style.display = 'block';
-      document.getElementById('result-bottom-bar').style.display = 'flex';
+      const data = await geminiRes.json();
+      if(data.error) throw new Error(data.error.message);
       
+      const translated = data.candidates[0].content.parts[0].text;
+      logStep("번역 완료! UI 생성 중...", 'success');
+
+      document.getElementById('res-box').innerText = translated;
+      document.getElementById('res-box').style.display = 'block';
+      document.getElementById('result-bottom-bar').style.display = 'flex';
+      document.getElementById('loading-overlay').style.display = 'none';
+
     } catch(e) {
-      logStep("오류: " + e.message, 'fail');
-    } finally {
-      setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 500);
+      logStep(`[치명적 오류] ${e.message}`, 'fail');
+      alert("엔진 오류: " + e.message);
     }
   }
 </script>
