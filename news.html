@@ -10,33 +10,39 @@
     * { box-sizing: border-box; }
     body { margin:0; background:#000; color:#fff; font-family:'Noto Sans KR', sans-serif; min-height:100vh; overflow-x: hidden; }
     
-    /* 배경 효과 (인덱스와 통일감) */
     .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); z-index: -1; }
 
     .container { max-width:900px; margin:0 auto; padding:20px 20px 60px 20px; position: relative; }
 
-    /* 홈 버튼 스타일 (소설 페이지와 동일) */
+    /* 홈 버튼: 소설 페이지와 동일하게 테두리 제거 및 크기 동기화 */
     .home-btn {
       position: absolute; top: 20px; left: 20px;
-      width: 45px; height: 45px; background: rgba(0, 255, 204, 0.1);
-      border: 1px solid var(--neon); border-radius: 12px;
+      width: 40px; height: 40px; background: transparent; /* 둘레(테두리) 제거 */
       display: flex; align-items: center; justify-content: center;
-      text-decoration: none; font-size: 20px; transition: 0.3s; z-index: 100;
+      text-decoration: none; font-size: 24px; transition: 0.3s; z-index: 100;
+      color: var(--neon);
     }
-    .home-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+    .home-btn:hover { transform: scale(1.1); text-shadow: 0 0 10px var(--neon); }
 
-    h1 { font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); text-align:center; margin-top: 60px; margin-bottom:30px; font-size: 1.8rem; letter-spacing: 3px; }
+    /* 제목 크기: 노벨 페이지 h1(1.5rem~1.8rem 수준)과 일치 */
+    h1 { 
+      font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); 
+      text-align:center; margin-top: 60px; margin-bottom:30px; 
+      font-size: 1.5rem; letter-spacing: 5px; 
+    }
     
+    /* 본문 폰트 및 스타일 동기화 */
     #news-content { 
       background: rgba(0,15,35,0.75); border: 1px solid var(--border); 
-      border-radius: 20px; padding: 25px; line-height: 1.8; font-size: 16px; 
+      border-radius: 20px; padding: 25px; line-height: 1.8; 
+      font-size: 15px; /* 노벨 페이지 본문 폰트 크기 동기화 */
       backdrop-filter: blur(10px); white-space: pre-wrap; 
       min-height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      color: #ececec;
     }
     
-    .loading { text-align:center; color:var(--neon); font-size:18px; padding:100px 0; font-family: 'Orbitron'; letter-spacing: 2px; }
+    .loading { text-align:center; color:var(--neon); font-size:16px; padding:100px 0; font-family: 'Orbitron'; letter-spacing: 2px; }
 
-    /* 하단 버전 정보 */
     .footer-ver { text-align: center; margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: rgba(0,255,204,0.3); letter-spacing: 1px; }
   </style>
 </head>
@@ -58,12 +64,9 @@
     async function loadNews() {
       const el = document.getElementById('news-content');
       try {
-        // 실제 API 경로 확인 필요
         const res = await fetch('/api/news');
         if (!res.ok) throw new Error(`API ERROR: ${res.status}`);
         const data = await res.json();
-        
-        // 데이터 출력
         el.innerHTML = data.summary || '최신 요약 데이터가 존재하지 않습니다.';
         el.classList.remove('loading');
       } catch (err) {
@@ -71,7 +74,7 @@
           <div style="color:#ff4444; text-align:center;">
             <p style="font-size:24px; margin-bottom:10px;">⚠️</p>
             <p>오류: ${err.message}</p>
-            <p style="font-size:13px; color:#888; margin-top:15px;">서버의 /api/news.js 설정이나 배포 상태를 확인해주세요.</p>
+            <p style="font-size:13px; color:#888; margin-top:15px;">서버 배포 상태를 확인해주세요.</p>
           </div>
         `;
         el.classList.remove('loading');
