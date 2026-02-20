@@ -2,35 +2,79 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NANA LAB - 뉴스섬머리</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root { --neon: #00ffcc; --border: rgba(0,255,204,0.2); }
-    body { margin:0; background:#000; color:#fff; font-family:'Noto Sans KR', sans-serif; min-height:100vh; }
-    .container { max-width:900px; margin:0 auto; padding:40px 20px; }
-    h1 { font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); text-align:center; margin-bottom:30px; }
-    #news-content { background:rgba(0,15,35,0.75); border:1px solid var(--border); border-radius:20px; padding:30px; line-height:1.8; font-size:16px; backdrop-filter:blur(10px); white-space:pre-wrap; }
-    .loading { text-align:center; color:var(--neon); font-size:18px; padding:50px 0; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:#000; color:#fff; font-family:'Noto Sans KR', sans-serif; min-height:100vh; overflow-x: hidden; }
+    
+    /* 배경 효과 (인덱스와 통일감) */
+    .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); z-index: -1; }
+
+    .container { max-width:900px; margin:0 auto; padding:20px 20px 60px 20px; position: relative; }
+
+    /* 홈 버튼 스타일 (소설 페이지와 동일) */
+    .home-btn {
+      position: absolute; top: 20px; left: 20px;
+      width: 45px; height: 45px; background: rgba(0, 255, 204, 0.1);
+      border: 1px solid var(--neon); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; font-size: 20px; transition: 0.3s; z-index: 100;
+    }
+    .home-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+
+    h1 { font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); text-align:center; margin-top: 60px; margin-bottom:30px; font-size: 1.8rem; letter-spacing: 3px; }
+    
+    #news-content { 
+      background: rgba(0,15,35,0.75); border: 1px solid var(--border); 
+      border-radius: 20px; padding: 25px; line-height: 1.8; font-size: 16px; 
+      backdrop-filter: blur(10px); white-space: pre-wrap; 
+      min-height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .loading { text-align:center; color:var(--neon); font-size:18px; padding:100px 0; font-family: 'Orbitron'; letter-spacing: 2px; }
+
+    /* 하단 버전 정보 */
+    .footer-ver { text-align: center; margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: rgba(0,255,204,0.3); letter-spacing: 1px; }
   </style>
 </head>
 <body>
+
+  <div class="bg-gradient"></div>
+
   <div class="container">
-    <h1>오늘의 뉴스섬머리</h1>
-    <div id="news-content" class="loading">로딩 중... Grok 요약 가져오는 중</div>
+    <a href="index.html" class="home-btn">🏠</a>
+
+    <h1>NEWS SUMMARY</h1>
+    
+    <div id="news-content" class="loading">LOADING DATA FROM GROK...</div>
+    
+    <div class="footer-ver">SYSTEM VERSION v2.80.0</div>
   </div>
 
   <script>
     async function loadNews() {
       const el = document.getElementById('news-content');
       try {
+        // 실제 API 경로 확인 필요
         const res = await fetch('/api/news');
-        if (!res.ok) throw new Error(`API 오류: ${res.status}`);
+        if (!res.ok) throw new Error(`API ERROR: ${res.status}`);
         const data = await res.json();
-        el.innerHTML = data.summary || '요약 데이터가 없습니다.';
+        
+        // 데이터 출력
+        el.innerHTML = data.summary || '최신 요약 데이터가 존재하지 않습니다.';
         el.classList.remove('loading');
       } catch (err) {
-        el.innerHTML = `<p style="color:#ff4444;">오류: ${err.message}</p><br>아직 api/news.js가 없거나 오류일 수 있어요.`;
+        el.innerHTML = `
+          <div style="color:#ff4444; text-align:center;">
+            <p style="font-size:24px; margin-bottom:10px;">⚠️</p>
+            <p>오류: ${err.message}</p>
+            <p style="font-size:13px; color:#888; margin-top:15px;">서버의 /api/news.js 설정이나 배포 상태를 확인해주세요.</p>
+          </div>
+        `;
+        el.classList.remove('loading');
       }
     }
     window.addEventListener('load', loadNews);
