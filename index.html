@@ -15,21 +15,17 @@
   @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
   #meteor-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
-  /* 메인 컨테이너: 모바일에서 상단 여백 확보를 위해 세로 정렬 최적화 */
-  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5vh; padding-bottom: 20px; }
+  .main-container { position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 4vh; padding-bottom: 20px; }
   
-  /* 이미지 및 타이틀 사이즈 모바일 최적화 */
-  .couple-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 25px var(--neon); margin-bottom: 15px; object-fit: cover; }
-  .main-title { font-family: 'Orbitron'; font-size: 1.8rem; letter-spacing: 6px; color: var(--neon); text-shadow: 0 0 15px var(--neon); margin-bottom: 20px; text-align: center; }
+  .couple-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: 0 0 25px var(--neon); margin-bottom: 12px; object-fit: cover; }
+  .main-title { font-family: 'Orbitron'; font-size: 1.7rem; letter-spacing: 5px; color: var(--neon); text-shadow: 0 0 15px var(--neon); margin-bottom: 18px; text-align: center; }
 
-  /* 메뉴 그리드: 모바일에서 더 촘촘하게 배치 */
-  .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 340px; }
-  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; }
-  .menu-btn:hover { background: rgba(0, 255, 204, 0.12); }
-  .menu-btn div { font-size: 11px; color: var(--neon); margin-top: 8px; font-weight: bold; }
-  .menu-btn span { font-size: 24px; }
+  .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 330px; }
+  .menu-btn { background: rgba(0, 255, 204, 0.05); border: 1px solid var(--border); border-radius: 12px; padding: 14px 5px; text-align: center; cursor: pointer; backdrop-filter: blur(8px); transition: 0.2s; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; }
+  .menu-btn:hover { background: rgba(0, 255, 204, 0.12); border-color: var(--neon); }
+  .menu-btn div { font-size: 11px; color: var(--neon); margin-top: 7px; font-weight: bold; }
+  .menu-btn span { font-size: 22px; }
 
-  /* 오디오 버튼 위치 상향 조정 */
   .bgm-force-btn {
     margin-top: 15px; padding: 10px 25px;
     background: rgba(0, 255, 204, 0.1); border: 1px solid var(--neon);
@@ -38,11 +34,12 @@
     box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
   }
 
-  @media (min-height: 800px) {
+  @media (min-height: 750px) {
     .main-container { justify-content: center; padding-top: 0; }
     .couple-img { width: 140px; height: 140px; }
     .main-title { font-size: 2.2rem; }
     .menu-btn { padding: 20px 10px; }
+    .menu-btn span { font-size: 28px; }
   }
 
   #history-modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
@@ -69,7 +66,7 @@
     <a href="novel.html" class="menu-btn"><span>📖</span><div>소설번역기</div></a>
     <a href="#" class="menu-btn"><span>📥</span><div>동영상다운로더</div></a>
     <a href="#" class="menu-btn"><span>✅</span><div>할일</div></a>
-    <a href="#" class="menu-btn"><span>📰</span><div>뉴스섬머리</div></a>
+    <a href="https://nana-lab.vercel.app/news.html" class="menu-btn"><span>📰</span><div>뉴스섬머리</div></a>
     <a href="#" class="menu-btn"><span>🎬</span><div>영화보기</div></a>
     <a href="#" class="menu-btn"><span>💡</span><div>아이디어체크</div></a>
     <a href="#" class="menu-btn"><span>🙏</span><div>오늘의 기도</div></a>
@@ -87,16 +84,16 @@
     <table>
       <thead><tr><th>VER</th><th>DATE</th><th>DESCRIPTION</th></tr></thead>
       <tbody>
-        <tr style="color:#fff;"><td>v2.80.0</td><td>26-02-20</td><td>모바일 레이아웃 최적화 및 노벨 엔진 버전 통합</td></tr>
-        <tr><td>v2.79.5</td><td>26-02-20</td><td>pocosmall.mp3 음원 파일명 확정 및 엔진 고도화</td></tr>
-        <tr><td>v2.79.0</td><td>26-02-20</td><td>오디오 강제 돌파 엔진 및 디버깅 로그 탑재</td></tr>
-        <tr><td>v2.78.9</td><td>26-02-18</td><td>문단 간격 로직 제거 및 원문 줄바꿈 복구</td></tr>
-        <tr><td>v2.78.5</td><td>26-02-17</td><td>제미나이 메모리 지침 통합 및 팩트체크 강화</td></tr>
-        <tr><td>v2.70.0</td><td>26-02-15</td><td>8대 메인 메뉴 체계 확정 (자동매매 포함)</td></tr>
-        <tr><td>v2.65.0</td><td>26-02-14</td><td>BGM 기능 임시 비활성화 및 리소스 최적화</td></tr>
-        <tr><td>v2.63.0</td><td>26-02-13</td><td>유성우 엔진(별똥별) 비주얼 강화 업그레이드</td></tr>
-        <tr><td>v2.42.0</td><td>26-02-10</td><td>커플 이미지 profile.png 고정 및 UI 테마 정립</td></tr>
-        <tr><td>v2.01.0</td><td>26-02-01</td><td>NANA LAB 프로젝트 공식 런칭 및 소설 엔진 탑재</td></tr>
+        <tr style="color:#fff;"><td>v2.80.0</td><td>26-02-20</td><td>뉴스섬머리 링크 연결 및 모바일 최적화 레이아웃</td></tr>
+        <tr><td>v2.79.5</td><td>26-02-20</td><td>pocosmall.mp3 음원 교체 및 오디오 엔진 고도화</td></tr>
+        <tr><td>v2.79.0</td><td>26-02-20</td><td>오디오 강제 돌파 엔진 및 디버깅 로그 통합</td></tr>
+        <tr><td>v2.78.9</td><td>26-02-18</td><td>번역 엔진 문단 간격 복구 및 줄바꿈 최적화</td></tr>
+        <tr><td>v2.78.5</td><td>26-02-17</td><td>메모리 지침 강화 및 실시간 팩트체크 시스템</td></tr>
+        <tr><td>v2.70.0</td><td>26-02-15</td><td>8대 메인 메뉴 UI 확정 (자동매매/기도 포함)</td></tr>
+        <tr><td>v2.65.0</td><td>26-02-14</td><td>BGM 기능 임시 삭제 및 성능 최적화 버전</td></tr>
+        <tr><td>v2.63.0</td><td>26-02-13</td><td>뭉툭하고 환한 별똥별 비주얼 엔진 업그레이드</td></tr>
+        <tr><td>v2.42.0</td><td>26-02-10</td><td>커플 이미지 profile.png 고정 및 테마 정립</td></tr>
+        <tr><td>v2.01.0</td><td>26-02-01</td><td>NANA LAB 프로젝트 공식 런칭 및 소설 엔진</td></tr>
       </tbody>
     </table>
   </div>
@@ -117,7 +114,6 @@
     });
   }
 
-  // 별 및 유성우 스크립트 (최적화 버전)
   const bg = document.getElementById('galaxy-bg');
   for (let i = 0; i < 120; i++) {
     const star = document.createElement('div');
