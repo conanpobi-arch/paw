@@ -21,22 +21,20 @@
       background: transparent; display: flex; align-items: center; justify-content: center;
       text-decoration: none; font-size: 24px; transition: 0.3s; z-index: 100; color: var(--neon);
     }
+    .home-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px var(--neon); }
 
-    /* 상단 헤더 영역 */
     .header-area { text-align: center; margin-bottom: 25px; flex-shrink: 0; }
     .news-header-title { 
       font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); 
       font-size: 2rem; letter-spacing: 8px; margin: 0;
     }
-    /* 포비님이 요청하신 날짜/시간 표시 (고정) */
     #data-time { 
       font-family: 'Orbitron'; font-size: 13px; color: rgba(0,255,204,0.7); 
       margin-top: 10px; letter-spacing: 2px;
     }
     
-    /* 뉴스 박스 */
     #news-box { 
-      width: 100%; height: 65vh; background: rgba(0,15,35,0.7); 
+      width: 100%; height: 70vh; background: rgba(0,15,35,0.7); 
       border: 1px solid var(--border); border-radius: 20px; 
       backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0,0,0,0.8);
       overflow-y: auto; position: relative;
@@ -44,7 +42,6 @@
 
     #news-content { padding: 45px; line-height: 2.1; font-size: 16px; color: #ececec; white-space: pre-wrap; word-break: keep-all; }
 
-    /* 커스텀 스크롤바 */
     #news-box::-webkit-scrollbar { width: 5px; }
     #news-box::-webkit-scrollbar-track { background: transparent; }
     #news-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -63,14 +60,12 @@
   <div class="bg-gradient"></div>
   <div class="container">
     <a href="index.html" class="home-btn">🏠</a>
-    
     <div class="header-area">
       <div class="news-header-title">NEWS SUMMARY</div>
-      <div id="data-time">FETCHING DATE...</div>
+      <div id="data-time">LOADING DATA...</div>
     </div>
-
     <div id="news-box">
-      <div id="news-content" class="loading">SYNCING DATA STREAM...</div>
+      <div id="news-content" class="loading">SYNCING GLOBAL NETWORK...</div>
     </div>
   </div>
 
@@ -81,16 +76,17 @@
 
       try {
         const res = await fetch('/api/news');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
         const data = await res.json();
 
-        // 1. 고정 헤더에 날짜/시간 데이터 삽입
         timeEl.innerText = `LAST UPDATED: ${data.generatedAt}`;
 
-        // 2. 본문 내 중복된 "최신 뉴스 섬머리..." 라인 제거 (정규식)
-        let cleanText = data.summary.replace(/.*최신 뉴스 섬머리.*(\n|$)/g, '').trim();
+        // 본문 텍스트 정제 (서두 멘트 및 # 기호 삭제)
+        let cleanText = data.summary
+          .replace(/#/g, '') 
+          .replace(/^(알겠습니다|네|현재|요청하신).*?\n/g, '')
+          .trim();
 
-        // 3. 카테고리 강조 처리
         const formatted = cleanText.replace(/(\d\.\s[^\n]+)/g, '<span class="category-item">$1</span>');
         
         contentEl.innerHTML = formatted;
