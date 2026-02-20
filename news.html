@@ -9,75 +9,88 @@
     :root { --neon: #00ffcc; --border: rgba(0,255,204,0.2); }
     * { box-sizing: border-box; }
     body { margin:0; background:#000; color:#fff; font-family:'Noto Sans KR', sans-serif; min-height:100vh; overflow-x: hidden; }
-    
     .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at center, #001220 0%, #000 100%); z-index: -1; }
-
     .container { max-width:900px; margin:0 auto; padding:20px 20px 60px 20px; position: relative; }
 
-    /* 홈 버튼: 소설 페이지와 동일하게 테두리 제거 및 크기 동기화 */
+    /* 홈 버튼 */
     .home-btn {
-      position: absolute; top: 20px; left: 20px;
-      width: 40px; height: 40px; background: transparent; /* 둘레(테두리) 제거 */
-      display: flex; align-items: center; justify-content: center;
-      text-decoration: none; font-size: 24px; transition: 0.3s; z-index: 100;
-      color: var(--neon);
+      position: absolute; top: 20px; left: 20px; width: 40px; height: 40px;
+      background: transparent; display: flex; align-items: center; justify-content: center;
+      text-decoration: none; font-size: 24px; transition: 0.3s; z-index: 100; color: var(--neon);
     }
-    .home-btn:hover { transform: scale(1.1); text-shadow: 0 0 10px var(--neon); }
+    .home-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon); }
 
-    /* 제목 크기: 노벨 페이지 h1(1.5rem~1.8rem 수준)과 일치 */
-    h1 { 
-      font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); 
-      text-align:center; margin-top: 60px; margin-bottom:30px; 
-      font-size: 1.5rem; letter-spacing: 5px; 
-    }
+    h1 { font-family:'Orbitron'; color:var(--neon); text-shadow:0 0 15px var(--neon); text-align:center; margin-top: 60px; margin-bottom:30px; font-size: 1.5rem; letter-spacing: 5px; }
     
-    /* 본문 폰트 및 스타일 동기화 */
     #news-content { 
-      background: rgba(0,15,35,0.75); border: 1px solid var(--border); 
-      border-radius: 20px; padding: 25px; line-height: 1.8; 
-      font-size: 15px; /* 노벨 페이지 본문 폰트 크기 동기화 */
-      backdrop-filter: blur(10px); white-space: pre-wrap; 
-      min-height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      color: #ececec;
+      background: rgba(0,15,35,0.75); border: 1px solid var(--border); border-radius: 20px; 
+      padding: 25px; line-height: 1.8; font-size: 15px; backdrop-filter: blur(10px); 
+      white-space: pre-wrap; min-height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: #ececec;
     }
-    
-    .loading { text-align:center; color:var(--neon); font-size:16px; padding:100px 0; font-family: 'Orbitron'; letter-spacing: 2px; }
 
+    /* 출처 링크 스타일 */
+    .sources-container { margin-top: 25px; padding-top: 20px; border-top: 1px dashed var(--border); }
+    .source-title { font-family: 'Orbitron'; font-size: 12px; color: var(--neon); margin-bottom: 10px; opacity: 0.8; }
+    .source-list { list-style: none; padding: 0; }
+    .source-item { margin-bottom: 5px; }
+    .source-link { color: #888; text-decoration: none; font-size: 13px; transition: 0.2s; }
+    .source-link:hover { color: var(--neon); text-decoration: underline; }
+
+    /* Google Search Suggestions (ToS) */
+    #search-entry-point { margin-top: 20px; }
+    #search-entry-point a { color: var(--neon) !important; text-decoration: none; font-size: 13px; }
+
+    .loading { text-align:center; color:var(--neon); font-size:16px; padding:100px 0; font-family: 'Orbitron'; letter-spacing: 2px; }
     .footer-ver { text-align: center; margin-top: 30px; font-family: 'Orbitron'; font-size: 10px; color: rgba(0,255,204,0.3); letter-spacing: 1px; }
   </style>
 </head>
 <body>
-
   <div class="bg-gradient"></div>
-
   <div class="container">
     <a href="index.html" class="home-btn">🏠</a>
-
     <h1>NEWS SUMMARY</h1>
-    
-    <div id="news-content" class="loading">LOADING DATA FROM GROK...</div>
-    
+    <div id="news-box">
+      <div id="news-content" class="loading">SEARCHING REAL-TIME DATA...</div>
+      <div id="search-entry-point"></div>
+      <div id="sources-area" class="sources-container" style="display:none;">
+        <div class="source-title">GROUNDING SOURCES</div>
+        <ul id="source-list" class="source-list"></ul>
+      </div>
+    </div>
     <div class="footer-ver">SYSTEM VERSION v2.80.0</div>
   </div>
 
   <script>
     async function loadNews() {
-      const el = document.getElementById('news-content');
+      const contentEl = document.getElementById('news-content');
+      const sourcesArea = document.getElementById('sources-area');
+      const sourceList = document.getElementById('source-list');
+      const entryPointEl = document.getElementById('search-entry-point');
+
       try {
         const res = await fetch('/api/news');
         if (!res.ok) throw new Error(`API ERROR: ${res.status}`);
         const data = await res.json();
-        el.innerHTML = data.summary || '최신 요약 데이터가 존재하지 않습니다.';
-        el.classList.remove('loading');
+
+        // 1. 요약 본문 삽입
+        contentEl.innerHTML = data.summary || '최신 요약 데이터가 없습니다.';
+        contentEl.classList.remove('loading');
+
+        // 2. Google Search Entry Point (ToS 준수)
+        if (data.searchEntryPointHtml) {
+          entryPointEl.innerHTML = data.searchEntryPointHtml;
+        }
+
+        // 3. 출처 리스트 생성
+        if (data.sources && data.sources.length > 0) {
+          sourcesArea.style.display = 'block';
+          sourceList.innerHTML = data.sources.map(src => 
+            `<li class="source-item"><a href="${src.url}" target="_blank" class="source-link">🔗 ${src.title}</a></li>`
+          ).join('');
+        }
       } catch (err) {
-        el.innerHTML = `
-          <div style="color:#ff4444; text-align:center;">
-            <p style="font-size:24px; margin-bottom:10px;">⚠️</p>
-            <p>오류: ${err.message}</p>
-            <p style="font-size:13px; color:#888; margin-top:15px;">서버 배포 상태를 확인해주세요.</p>
-          </div>
-        `;
-        el.classList.remove('loading');
+        contentEl.innerHTML = `<p style="color:#ff4444; text-align:center;">⚠️ 엔진 오류: ${err.message}</p>`;
+        contentEl.classList.remove('loading');
       }
     }
     window.addEventListener('load', loadNews);
