@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>NANA NOVEL ENGINE V2.78.7</title>
+<title>NANA NOVEL ENGINE V2.78.9</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root { --neon: #00ffcc; --bg: #000b1a; --border: rgba(0, 255, 204, 0.2); }
@@ -59,7 +59,7 @@
 <div class="container">
   <div class="nav-header">
     <div onclick="location.href='index.html'" style="cursor:pointer; font-size:26px;">🏠</div>
-    <div class="engine-title">NANA NOVEL V2.78.7</div>
+    <div class="engine-title">NANA NOVEL V2.78.9</div>
     <div onclick="document.getElementById('mainInput').value=''" style="cursor:pointer; font-size:26px;">🗑️</div>
   </div>
   <div class="card">
@@ -134,27 +134,27 @@
             }
           } catch(e) { logStep(`BLOCK: ${s.name} 실패.`, 'fail'); }
         }
-        if(!success) throw new Error("크롤링 데이터가 비어있습니다.");
+        if(!success) throw new Error("크롤링 데이터 실패.");
       }
 
       setStatus("제미나이 감독관 모드 가동...");
-      logStep("API: 포비님 메모리 지침 동기화...");
+      logStep("API: 포비님 지침(존댓말 예법 등) 동기화...");
 
       const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: `당신은 코난포비님의 전담 소설 전문 번역가이자 엄격한 감독관입니다. 
-다음 [감독관 지침]을 단 하나도 어기지 말고 철저히 준수하여 번역하십시오.
+다음 [감독관 지침]을 철저히 준수하십시오.
 
 [감독관 지침]:
 1. [No Omission]: 단 하나의 문장도 누락하거나 요약하지 마십시오. 원문 문장 개수와 번역문 개수를 정확히 맞추십시오.
 2. [Authentic Style]: 제미나이 특유의 유려하고 풍부한 문학적 표현력을 발휘하십시오.
-3. [Cultural Context]: 현대어를 남발하지 말고 소설 당대의 문화와 언어적 색채를 살리십시오. 존댓말과 반말은 가족관계, 친분정도, 남녀관계, 고대중국의 예법에 따라 일관되게 적용하세요.
+3. [Cultural Context]: 현대어를 남발하지 말고 소설 당대의 문화와 언어적 색채를 살리십시오. 존댓말과 반말은 가족관계, 친분정도, 남녀관계, 고대중국의 예법에 따라 일관되게 적용하십시오.
 4. [Anti-China]: 중국 발음을 절대 사용하지 마십시오. 모든 한자는 대한민국 한자음(한국식 읽기)으로만 표기하십시오. 
    - 예: '何'는 '하'로 번역.
-5. [Structure]: 문장 끝 줄바꿈을 유지하고, 문단이 바뀔 때 빈 줄(\n\n)을 한 번 삽입하십시오.
-6. 제목이나 사이트 정보는 번역하지 말고 본문 텍스트만 번역하십시오.
+5. [Structure]: 문장 끝 줄바꿈(\n)을 유지하고, 문단이 바뀔 때는 반드시 빈 줄(\n\n)을 삽입하여 문단을 분리하십시오.
+6. 본문 텍스트만 번역하십시오.
 
 원문:
 ${rawData}` }] }],
@@ -165,8 +165,8 @@ ${rawData}` }] }],
       const data = await geminiRes.json();
       let translated = data.candidates[0].content.parts[0].text;
       
-      // 문단 간격 최적화
-      translated = translated.split('\n').map(l => l.trim()).join('\n').replace(/\n\n\n/g, '\n\n');
+      // [V2.78.9] 문단 간격 복구 로직: 과도한 압축을 막고 빈 줄을 유지
+      translated = translated.trim().replace(/\n{3,}/g, '\n\n');
 
       logStep("SUCCESS: 감독관 검수 완료.", 'success');
       const rb = document.getElementById('res-box');
